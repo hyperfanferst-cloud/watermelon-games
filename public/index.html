@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Resource Centre</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="/">Study Like a Guines</a>
+      <nav>
+        <a href="#resources">Resources</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div>
+        <p class="eyebrow">Online resource centre</p>
+        <h1><p class="lead">Browse study resources, reference material and other useful links.</p></h1>
+        <p class="lead">Browse study resources, reference material and other useful links.</p>
+      </div>
+    </section>
+
+    <section id="resources" class="wrap cards">
+      <article class="card">
+        <h2>Study Resources</h2>
+        <p>Revision notes, reference material and useful learning tools.</p>
+        <a class="button secondary" href="#about">View resources</a>
+      </article>
+      <article class="card">
+        <h2>Quick Links</h2>
+        <p>A simple collection of commonly used online resources.</p>
+        <a class="button secondary" href="#about">Explore</a>
+      </article>
+      <article class="card access-card">
+        <h2>Members Area</h2>
+        <p>Enter your access code to open the private area.</p>
+        <form action="/login" method="post">
+          <label for="code">Access code</label>
+          <div class="code-row">
+            <input id="code" name="code" type="password" autocomplete="off" placeholder="Enter code" required>
+            <button class="button" type="submit">Continue</button>
+          </div>
+        </form>
+        <p id="message" class="message"></p>
+      </article>
+    </section>
+
+    <section id="about" class="wrap info">
+      <h2>About</h2>
+      <p>This starter is a normal public website with a server-protected members area.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Student Resource Centre</div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const message = document.getElementById("message");
+    if (params.get("error") === "invalid") message.textContent = "That access code is not valid.";
+    if (params.get("error") === "login") message.textContent = "Please enter the access code first.";
+  </script>
+</body>
+</html>

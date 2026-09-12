@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Play Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: #1f2937;
+    }
+
+    .topbar a,
+    .topbar button {
+      background: #374151;
+      color: white;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .player {
+      width: 100%;
+      height: calc(100vh - 68px);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="/games">← Back to Games</a>
+
+    <button onclick="goFullscreen()">Fullscreen</button>
+  </div>
+
+  <div class="player" id="player">
+    <iframe
+      src="saltyseas.io"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <script>
+    function goFullscreen() {
+      const player = document.getElementById("player");
+
+      if (player.requestFullscreen) {
+        player.requestFullscreen();
+      }
+    }
+  </script>
+
+</body>
+</html>
