@@ -117,31 +117,6 @@
 ">
   ← Back to Games
 </a>
-
-<button id="fullscreenBtn" style="
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 99999;
-  padding: 10px 16px;
-  background: #222;
-  color: white;
-  border: 1px solid #555;
-  border-radius: 8px;
-  cursor: pointer;
-">
-  ⛶ Fullscreen
-</button>
-
-<script>
-  document.getElementById("fullscreenBtn").addEventListener("click", function () {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  });
-</script>
 <body>
     <div id="unity-container">
         <canvas id="unity-canvas" style="position: absolute; width: 100%; height: 100%"></canvas>

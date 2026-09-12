@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Slow Roads</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    #gameWrap {
+      width: 100%;
+      height: 100%;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .back-btn,
+    .fullscreen-btn {
+      position: fixed;
+      top: 15px;
+      z-index: 99999;
+      padding: 10px 14px;
+      background: rgba(20, 20, 20, 0.85);
+      color: white;
+      border: 1px solid #555;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .back-btn {
+      left: 15px;
+    }
+
+    .fullscreen-btn {
+      right: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <a class="back-btn" href="/games">
+    ← Back to Games
+  </a>
+
+  <button class="fullscreen-btn" id="fullscreenBtn">
+    ⛶ Fullscreen
+  </button>
+
+  <div id="gameWrap">
+    <iframe
+      src="https://slowroads.io/"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <script>
+    document.getElementById("fullscreenBtn").addEventListener("click", async () => {
+      const gameWrap = document.getElementById("gameWrap");
+
+      if (!document.fullscreenElement) {
+        await gameWrap.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    });
+  </script>
+
+</body>
+</html>

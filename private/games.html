@@ -2,113 +2,7941 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
- <title>Watermelon Games</title>
-  <link rel="stylesheet" href="/style.css">
-<style>
-  .games-hero {
-    padding: 55px 0 25px;
-  }
 
-  .game-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 18px;
-    padding-bottom: 60px;
-  }
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
 
-  .game-card {
-    text-decoration: none;
-    color: white;
-    background: #121212;
-    border-radius: 14px;
-    overflow: hidden;
-    transition: 0.2s;
-  }
+  <meta name="theme-color" content="#ff3154">
 
-  .game-card:hover {
-    transform: scale(1.04);
-  }
+  <link rel="manifest" href="/manifest.json">
 
-.game-image {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  background: #242424;
-  display: grid;
-  place-items: center;
-}
+  <title>Watermelon Games</title>
 
-.game-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  .game-card span {
-    display: block;
-    padding: 12px;
-    font-weight: 700;
-  }
+    :root {
+      --accent: #ff3154;
+      --accent2: #ff7289;
+      --dark-accent: #8d001a;
+      --glow: rgba(255,49,84,.28);
+      --strong-glow: rgba(255,49,84,.55);
 
-  .logout {
-    margin: 20px 0 40px;
-  }
-</style>
+      --bg1: #310710;
+      --bg2: #111;
+      --bg3: #060606;
+
+      --card: rgba(21,21,21,.92);
+      --card2: #191919;
+
+      --text: #fff;
+      --muted: #888;
+
+      --radius: 16px;
+    }
+
+    body[data-theme="green"] {
+      --accent: #48d96f;
+      --accent2: #83ee9c;
+      --dark-accent: #0d672a;
+      --glow: rgba(72,217,111,.28);
+      --strong-glow: rgba(72,217,111,.55);
+      --bg1: #082b13;
+    }
+
+    body[data-theme="blue"] {
+      --accent: #3c8cff;
+      --accent2: #79b1ff;
+      --dark-accent: #114382;
+      --glow: rgba(60,140,255,.28);
+      --strong-glow: rgba(60,140,255,.55);
+      --bg1: #071b37;
+    }
+
+    body[data-theme="purple"] {
+      --accent: #9b5cff;
+      --accent2: #bc91ff;
+      --dark-accent: #4d188f;
+      --glow: rgba(155,92,255,.28);
+      --strong-glow: rgba(155,92,255,.55);
+      --bg1: #1b0834;
+    }
+
+    body[data-theme="orange"] {
+      --accent: #ff8a2b;
+      --accent2: #ffb166;
+      --dark-accent: #944100;
+      --glow: rgba(255,138,43,.28);
+      --strong-glow: rgba(255,138,43,.55);
+      --bg1: #351607;
+    }
+
+    body[data-theme="pink"] {
+      --accent: #ff55b8;
+      --accent2: #ff8bce;
+      --dark-accent: #8b1558;
+      --glow: rgba(255,85,184,.28);
+      --strong-glow: rgba(255,85,184,.55);
+      --bg1: #350b26;
+    }
+
+    body[data-theme="yellow"] {
+      --accent: #f4d83a;
+      --accent2: #fff083;
+      --dark-accent: #8a7210;
+      --glow: rgba(244,216,58,.25);
+      --strong-glow: rgba(244,216,58,.5);
+      --bg1: #2e2805;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+
+      background:
+        radial-gradient(circle at 50% -10%, var(--bg1), var(--bg2) 38%, var(--bg3));
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      overflow-x: hidden;
+
+      transition:
+        background .5s ease,
+        color .3s ease;
+    }
+
+    body.animations-off *,
+    body.animations-off *::before,
+    body.animations-off *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    body.animations-reduced *,
+    body.animations-reduced *::before,
+    body.animations-reduced *::after {
+      animation-duration: .15s !important;
+      transition-duration: .15s !important;
+    }
+
+    /* =========================
+       LOADING SCREEN
+       ========================= */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+
+      display: grid;
+      place-items: center;
+
+      background:
+        radial-gradient(circle at center, var(--bg1), #070707 65%);
+
+      transition:
+        opacity .6s ease,
+        visibility .6s ease;
+    }
+
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-inner {
+      text-align: center;
+    }
+
+    .loader-logo {
+      font-size: 72px;
+      animation: loaderBounce 1s ease-in-out infinite;
+    }
+
+    .loader-title {
+      margin-top: 13px;
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+
+    .loader-bar {
+      width: 190px;
+      height: 5px;
+      margin: 18px auto 0;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #222;
+    }
+
+    .loader-progress {
+      width: 45%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      box-shadow: 0 0 20px var(--strong-glow);
+      animation: loaderMove 1.15s ease-in-out infinite alternate;
+    }
+
+    @keyframes loaderBounce {
+      50% {
+        transform:
+          translateY(-10px)
+          rotate(-6deg)
+          scale(1.08);
+      }
+    }
+
+    @keyframes loaderMove {
+      from {
+        transform: translateX(-100%);
+      }
+
+      to {
+        transform: translateX(220%);
+      }
+    }
+
+    /* =========================
+       BACKGROUND
+       ========================= */
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -10;
+      pointer-events: none;
+      opacity: .12;
+
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+
+      background-size: 42px 42px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      to {
+        background-position:
+          42px 42px,
+          42px 42px;
+      }
+    }
+
+    .blob {
+      position: fixed;
+      z-index: -9;
+      border-radius: 50%;
+      background: var(--glow);
+      filter: blur(130px);
+      pointer-events: none;
+    }
+
+    .blob1 {
+      width: 600px;
+      height: 600px;
+      left: -220px;
+      top: -300px;
+      animation: blob1 12s ease-in-out infinite alternate;
+    }
+
+    .blob2 {
+      width: 470px;
+      height: 470px;
+      right: -180px;
+      top: 34%;
+      animation: blob2 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes blob1 {
+      to {
+        transform:
+          translate(520px, 130px)
+          scale(1.15);
+      }
+    }
+
+    @keyframes blob2 {
+      to {
+        transform:
+          translate(-260px, 90px)
+          scale(1.18);
+      }
+    }
+
+    #cursorGlow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      z-index: -8;
+      pointer-events: none;
+      border-radius: 50%;
+
+      background:
+        radial-gradient(circle, var(--glow), transparent 70%);
+
+      transform: translate(-50%, -50%);
+    }
+
+    /* =========================
+       TOP BAR
+       ========================= */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      min-height: 68px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 14px;
+
+      padding:
+        max(9px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        9px
+        max(18px, env(safe-area-inset-left));
+
+      background: rgba(10,10,10,.82);
+
+      border-bottom:
+        1px solid rgba(255,255,255,.07);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      transition:
+        border-color .3s ease,
+        box-shadow .3s ease;
+    }
+
+    .topbar.scrolled {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 8px 35px rgba(0,0,0,.45),
+        0 0 22px var(--glow);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 900;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+      font-size: 22px;
+
+      background:
+        linear-gradient(135deg, var(--accent), var(--dark-accent));
+
+      box-shadow:
+        0 0 25px var(--glow);
+
+      animation:
+        logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      50% {
+        transform:
+          translateY(-5px)
+          rotate(-5deg);
+      }
+    }
+
+    .logo-text {
+      white-space: nowrap;
+    }
+
+    .logo-text strong {
+      color: var(--accent);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn,
+    .top-btn {
+      min-height: 44px;
+
+      border:
+        1px solid rgba(255,255,255,.09);
+
+      background: #171717;
+      color: white;
+      border-radius: 11px;
+      cursor: pointer;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+    }
+
+    .icon-btn {
+      width: 44px;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+    }
+
+    .top-btn {
+      padding: 10px 14px;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .icon-btn:hover,
+      .top-btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+        background: #222;
+
+        box-shadow:
+          0 0 18px var(--glow);
+      }
+
+      #settingsButton:hover {
+        transform:
+          rotate(70deg)
+          scale(1.07);
+      }
+    }
+
+    /* =========================
+       MAIN
+       ========================= */
+
+    .container {
+      width:
+        min(1180px, calc(100% - 32px));
+
+      margin: auto;
+
+      padding:
+        38px 0
+        max(70px, env(safe-area-inset-bottom));
+    }
+
+    .hero-heading {
+      text-align: center;
+      margin-bottom: 28px;
+      animation: heroEnter .7s ease;
+    }
+
+    @keyframes heroEnter {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(-18px)
+          scale(.97);
+      }
+    }
+
+    .hero-heading h1 {
+      margin: 0;
+
+      font-size:
+        clamp(29px, 5vw, 42px);
+
+      font-weight: 950;
+
+      background:
+        linear-gradient(
+          90deg,
+          white,
+          var(--accent2),
+          white
+        );
+
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      animation:
+        titleShimmer 4s linear infinite;
+    }
+
+    @keyframes titleShimmer {
+      to {
+        background-position: -200% center;
+      }
+    }
+
+    .hero-heading p {
+      margin: 9px 0 0;
+      color: var(--muted);
+    }
+
+    .line {
+      width: 65px;
+      height: 3px;
+      margin: 15px auto 0;
+      border-radius: 999px;
+      background: var(--accent);
+
+      box-shadow:
+        0 0 18px var(--strong-glow);
+
+      animation:
+        linePulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes linePulse {
+      to {
+        width: 90px;
+      }
+    }
+
+    /* =========================
+       PROFILE + STATS
+       ========================= */
+
+    .dashboard {
+      display: grid;
+
+      grid-template-columns:
+        1.4fr repeat(3, 1fr);
+
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: var(--radius);
+
+      background:
+        rgba(20,20,20,.72);
+
+      backdrop-filter:
+        blur(12px);
+
+      box-shadow:
+        0 12px 30px rgba(0,0,0,.2);
+    }
+
+    .profile-panel {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .profile-avatar {
+      width: 50px;
+      height: 50px;
+
+      display: grid;
+      place-items: center;
+
+      flex-shrink: 0;
+      border-radius: 15px;
+
+      background:
+        linear-gradient(135deg, var(--accent), var(--dark-accent));
+
+      font-size: 26px;
+
+      box-shadow:
+        0 0 18px var(--glow);
+    }
+
+    .profile-copy {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .profile-copy small {
+      color: #777;
+    }
+
+    .profile-name {
+      margin-top: 3px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .edit-profile {
+      border: 0;
+      background: transparent;
+      color: var(--accent2);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .stat {
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--accent2);
+    }
+
+    .stat-label {
+      margin-top: 3px;
+      display: block;
+      color: #777;
+      font-size: 12px;
+    }
+
+    /* =========================
+       ANNOUNCEMENT
+       ========================= */
+
+    .announcement {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      padding: 13px 15px;
+      margin-bottom: 24px;
+
+      border:
+        1px solid var(--glow);
+
+      border-radius: 13px;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--glow),
+          rgba(20,20,20,.82)
+        );
+
+      overflow: hidden;
+      position: relative;
+    }
+
+    .announcement::after {
+      content: "";
+
+      position: absolute;
+
+      width: 80px;
+      height: 180%;
+
+      left: -120px;
+      top: -40%;
+
+      transform: rotate(20deg);
+
+      background:
+        rgba(255,255,255,.08);
+
+      animation:
+        announcementShine 5s ease-in-out infinite;
+    }
+
+    @keyframes announcementShine {
+      55%,
+      100% {
+        left: 115%;
+      }
+    }
+
+    .announcement-icon {
+      font-size: 23px;
+    }
+
+    .announcement strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .announcement span {
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    /* =========================
+       FEATURED
+       ========================= */
+
+    .featured {
+      position: relative;
+      min-height: 260px;
+
+      display: flex;
+      align-items: flex-end;
+
+      margin-bottom: 28px;
+      overflow: hidden;
+      border-radius: 21px;
+
+      border:
+        1px solid rgba(255,255,255,.09);
+
+      background: #111;
+
+      box-shadow:
+        0 20px 45px rgba(0,0,0,.35);
+    }
+
+    .featured-image {
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      filter:
+        brightness(.58)
+        saturate(1.1);
+
+      transition:
+        transform .6s ease;
+    }
+
+    .featured:hover .featured-image {
+      transform: scale(1.045);
+    }
+
+    .featured::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(0,0,0,.92),
+          rgba(0,0,0,.25)
+        );
+    }
+
+    .featured-content {
+      position: relative;
+      z-index: 2;
+      width: min(560px, 90%);
+      padding: 28px;
+    }
+
+    .featured-label {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .8px;
+    }
+
+    .featured h2 {
+      margin: 0;
+
+      font-size:
+        clamp(27px, 5vw, 40px);
+    }
+
+    .featured p {
+      margin: 8px 0 17px;
+      color: #bbb;
+      line-height: 1.5;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      min-height: 44px;
+      padding: 10px 16px;
+            border: 1px solid transparent;
+      border-radius: 11px;
+
+      font-weight: 800;
+      cursor: pointer;
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+    }
+
+    .primary-btn {
+      background: var(--accent);
+      color: white;
+
+      box-shadow:
+        0 0 20px var(--glow);
+    }
+
+    .secondary-btn {
+      background: #1c1c1c;
+      color: white;
+
+      border-color:
+        rgba(255,255,255,.1);
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .primary-btn:hover,
+      .secondary-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .primary-btn:hover {
+        box-shadow:
+          0 0 28px var(--strong-glow);
+      }
+
+      .secondary-btn:hover {
+        border-color: var(--accent);
+      }
+    }
+
+    /* =========================
+       SEARCH
+       ========================= */
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .search {
+      flex: 1;
+      min-height: 48px;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      padding: 0 14px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 13px;
+      background: #171717;
+
+      transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .search:focus-within {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 0 3px var(--glow);
+    }
+
+    .search span {
+      color: #777;
+    }
+
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: white;
+      font-size: 14px;
+    }
+
+    .search input::placeholder {
+      color: #666;
+    }
+
+    .random-btn {
+      min-height: 48px;
+      padding: 0 17px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 13px;
+      background: #171717;
+      color: white;
+
+      cursor: pointer;
+      font-weight: 800;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .random-btn:hover {
+        transform:
+          translateY(-2px)
+          rotate(-1deg);
+
+        border-color: var(--accent);
+
+        box-shadow:
+          0 0 18px var(--glow);
+      }
+    }
+
+    /* =========================
+       FILTERS
+       ========================= */
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 23px;
+    }
+
+    .filter {
+      min-height: 39px;
+      padding: 7px 13px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 999px;
+      background: #171717;
+      color: #aaa;
+
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+
+      transition:
+        color .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .filter.active {
+      color: white;
+      background: var(--accent);
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 15px var(--glow);
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .filter:hover {
+        color: white;
+        border-color: var(--accent);
+        transform: translateY(-1px);
+      }
+    }
+
+    /* =========================
+       SECTION HEADERS
+       ========================= */
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 24px 0 12px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section-header span {
+      color: #777;
+      font-size: 12px;
+    }
+
+    /* =========================
+       GAME GRID
+       ========================= */
+
+    .games-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0,1fr));
+
+      gap: 16px;
+    }
+
+    .game-card {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: var(--radius);
+
+      background: var(--card);
+
+      box-shadow:
+        0 14px 30px rgba(0,0,0,.25);
+
+      transform-style: preserve-3d;
+
+      transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+
+      animation:
+        cardEnter .55s both;
+    }
+
+    @keyframes cardEnter {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(18px)
+          scale(.97);
+      }
+    }
+
+    .game-card.hidden {
+      display: none;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .game-card:hover {
+        border-color: var(--accent);
+
+        box-shadow:
+          0 18px 40px rgba(0,0,0,.38),
+          0 0 22px var(--glow);
+      }
+    }
+
+    .game-image-wrap {
+      position: relative;
+      height: 170px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .game-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      transition:
+        transform .45s ease,
+        filter .3s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .game-card:hover .game-image {
+        transform: scale(1.07);
+        filter: brightness(1.08);
+      }
+    }
+
+    .game-image-wrap::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(0,0,0,.65),
+          transparent 55%
+        );
+
+      pointer-events: none;
+    }
+
+    .card-shine {
+      position: absolute;
+      z-index: 3;
+
+      width: 65px;
+      height: 160%;
+
+      left: -100px;
+      top: -30%;
+
+      transform: rotate(18deg);
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.14),
+          transparent
+        );
+
+      pointer-events: none;
+
+      transition:
+        left .6s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .game-card:hover .card-shine {
+        left: 125%;
+      }
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 4;
+
+      padding: 5px 8px;
+      border-radius: 999px;
+
+      background: var(--accent);
+      color: white;
+
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: .6px;
+
+      box-shadow:
+        0 0 15px var(--glow);
+    }
+
+    .favorite-btn {
+      position: absolute;
+      z-index: 5;
+      top: 9px;
+      right: 9px;
+
+      width: 38px;
+      height: 38px;
+
+      display: grid;
+      place-items: center;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 11px;
+
+      background:
+        rgba(0,0,0,.65);
+
+      color: white;
+      cursor: pointer;
+
+      backdrop-filter: blur(8px);
+
+      transition:
+        transform .2s ease,
+        background .2s ease;
+    }
+
+    .favorite-btn.active {
+      background: var(--accent);
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .favorite-btn:hover {
+        transform: scale(1.08);
+      }
+    }
+
+    .game-content {
+      padding: 14px;
+    }
+
+    .game-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .game-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .info-btn {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+
+      display: grid;
+      place-items: center;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 9px;
+
+      background: #222;
+      color: #aaa;
+
+      cursor: pointer;
+      font-weight: 900;
+
+      transition:
+        color .2s ease,
+        border-color .2s ease;
+    }
+
+    .info-btn:hover {
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .game-category {
+      margin-top: 4px;
+      color: #777;
+      font-size: 11px;
+    }
+
+    .game-description {
+      min-height: 36px;
+      margin: 9px 0 12px;
+      color: #aaa;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .play-btn {
+      position: relative;
+      width: 100%;
+      min-height: 43px;
+      overflow: hidden;
+
+      border: 0;
+      border-radius: 10px;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--accent),
+          var(--dark-accent)
+        );
+
+      color: white;
+      cursor: pointer;
+
+      font-weight: 900;
+
+      box-shadow:
+        0 0 17px var(--glow);
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .play-btn:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+          0 0 25px var(--strong-glow);
+      }
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+
+      background:
+        rgba(255,255,255,.35);
+
+      transform: scale(0);
+
+      animation:
+        ripple .55s linear;
+
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* =========================
+       RECENTLY PLAYED
+       ========================= */
+
+    #recentSection {
+      margin-top: 30px;
+    }
+
+    .recent-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(5, minmax(0,1fr));
+
+      gap: 10px;
+    }
+
+    .recent-card {
+      min-width: 0;
+      overflow: hidden;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: 12px;
+
+      background: #171717;
+      cursor: pointer;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease;
+    }
+
+    .recent-card img {
+      width: 100%;
+      height: 82px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .recent-card strong {
+      display: block;
+      padding: 9px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      font-size: 11px;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .recent-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+      }
+    }
+
+    /* =========================
+       EMPTY STATE
+       ========================= */
+
+    .empty {
+      display: none;
+
+      padding: 45px 20px;
+      text-align: center;
+
+      border:
+        1px dashed rgba(255,255,255,.12);
+
+      border-radius: var(--radius);
+
+      color: #777;
+    }
+
+    .empty.show {
+      display: block;
+    }
+
+    .empty-icon {
+      margin-bottom: 9px;
+      font-size: 35px;
+    }
+
+    /* =========================
+       SKELETONS
+       ========================= */
+
+    .skeleton-grid {
+      display: none;
+
+      grid-template-columns:
+        repeat(3, minmax(0,1fr));
+
+      gap: 16px;
+    }
+
+    .skeleton-card {
+      height: 285px;
+      overflow: hidden;
+      position: relative;
+
+      border-radius: var(--radius);
+      background: #161616;
+    }
+
+    .skeleton-card::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      transform: translateX(-100%);
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,.06),
+          transparent
+        );
+
+      animation:
+        skeleton 1.25s infinite;
+    }
+
+    @keyframes skeleton {
+      to {
+        transform: translateX(100%);
+      }
+    }
+
+    /* =========================
+       OVERLAYS + MODALS
+       ========================= */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 18px;
+
+      background:
+        rgba(0,0,0,.75);
+
+      backdrop-filter: blur(13px);
+      -webkit-backdrop-filter: blur(13px);
+    }
+
+    .overlay.show {
+      display: flex;
+      animation: overlayIn .22s ease;
+    }
+
+    @keyframes overlayIn {
+      from {
+        opacity: 0;
+      }
+    }
+
+    .modal {
+      width: min(460px, 100%);
+      max-height: min(720px, 90dvh);
+      overflow-y: auto;
+
+      padding: 22px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 18px;
+
+      background: #151515;
+
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.55),
+        0 0 30px var(--glow);
+
+      animation: modalIn .28s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(14px)
+          scale(.97);
+      }
+    }
+
+    .modal h2 {
+      margin: 0 0 7px;
+    }
+
+    .modal-note {
+      margin: 0 0 18px;
+      color: #888;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .modal-close {
+      width: 100%;
+      min-height: 44px;
+
+      margin-top: 15px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 10px;
+
+      background: #222;
+      color: white;
+
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    /* =========================
+       THEME PICKER
+       ========================= */
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 9px;
+    }
+
+    .theme-choice {
+      min-height: 66px;
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      padding: 11px;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 12px;
+
+      background: #1d1d1d;
+      color: white;
+
+      cursor: pointer;
+      text-align: left;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+    .theme-choice.active {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 18px var(--glow);
+    }
+
+    .theme-choice:hover {
+      transform: translateY(-2px);
+    }
+
+    .theme-emoji {
+      font-size: 27px;
+    }
+
+    .theme-choice strong {
+      display: block;
+    }
+
+    .theme-choice small {
+      color: #777;
+    }
+
+    /* =========================
+       SETTINGS
+       ========================= */
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+
+      padding: 13px 0;
+
+      border-bottom:
+        1px solid rgba(255,255,255,.06);
+    }
+
+    .setting-row:last-of-type {
+      border-bottom: 0;
+    }
+
+    .setting-row strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .setting-row select,
+    .setting-row input {
+      min-height: 40px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 9px;
+
+      background: #202020;
+      color: white;
+
+      padding: 7px 9px;
+      outline: none;
+    }
+
+    /* =========================
+       PROFILE EDITOR
+       ========================= */
+
+    .avatar-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .avatar-choice {
+      width: 45px;
+      height: 45px;
+
+      display: grid;
+      place-items: center;
+
+      border:
+        1px solid rgba(255,255,255,.08);
+
+      border-radius: 11px;
+
+      background: #202020;
+      color: white;
+
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .avatar-choice.active {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 15px var(--glow);
+    }
+
+    .profile-input {
+      width: 100%;
+      min-height: 44px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 10px;
+
+      background: #202020;
+      color: white;
+
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    .profile-input:focus {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 0 3px var(--glow);
+    }
+
+    /* =========================
+       CHANGELOG
+       ========================= */
+
+    .change {
+      margin-bottom: 9px;
+      padding: 11px;
+
+      border-radius: 10px;
+
+      background: #1d1d1d;
+
+      border:
+        1px solid rgba(255,255,255,.06);
+    }
+
+    .change strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .change span {
+      color: #888;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    /* =========================
+       GAME INFO
+       ========================= */
+
+    .info-image {
+      width: 100%;
+      height: 190px;
+
+      object-fit: cover;
+
+      margin-bottom: 14px;
+      border-radius: 12px;
+    }
+
+    /* =========================
+       LAUNCH SCREEN
+       ========================= */
+
+    .launch-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+
+      display: none;
+      place-items: center;
+
+      background:
+        radial-gradient(
+          circle at center,
+          var(--bg1),
+          #050505 65%
+        );
+    }
+
+    .launch-screen.show {
+      display: grid;
+      animation: launchIn .3s ease;
+    }
+
+    @keyframes launchIn {
+      from {
+        opacity: 0;
+      }
+    }
+
+    .launch-inner {
+      text-align: center;
+    }
+
+    .launch-emoji {
+      font-size: 65px;
+      animation: launchEmoji .7s ease-in-out infinite alternate;
+    }
+
+    @keyframes launchEmoji {
+      to {
+        transform:
+          scale(1.14)
+          rotate(6deg);
+      }
+    }
+
+    .launch-title {
+      margin-top: 13px;
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    /* =========================
+       TOASTS
+       ========================= */
+
+    .toast-box {
+      position: fixed;
+      z-index: 30000;
+
+      right:
+        max(15px, env(safe-area-inset-right));
+
+      bottom:
+        max(15px, env(safe-area-inset-bottom));
+
+      display: grid;
+      gap: 8px;
+
+      pointer-events: none;
+    }
+
+    .toast {
+      min-width: 220px;
+      max-width: 320px;
+
+      padding: 12px 14px;
+
+      border:
+        1px solid rgba(255,255,255,.09);
+
+      border-radius: 11px;
+
+      background:
+        rgba(24,24,24,.94);
+
+      color: white;
+
+      box-shadow:
+        0 15px 35px rgba(0,0,0,.4),
+        0 0 18px var(--glow);
+
+      animation: toastIn .3s ease;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(10px)
+          scale(.96);
+      }
+    }
+
+    .toast.hide {
+      animation: toastOut .25s forwards;
+    }
+
+    @keyframes toastOut {
+      to {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+    }
+
+    /* =========================
+       FLOATING ACCESSORIES
+       ========================= */
+
+    .accessory {
+      position: fixed;
+      z-index: -3;
+
+      pointer-events: none;
+      user-select: none;
+
+      opacity: .1;
+
+      animation:
+        accessoryFloat 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes accessoryFloat {
+      to {
+        transform:
+          translateY(-40px)
+          rotate(15deg);
+      }
+    }
+
+    /* =========================
+       FOOTER
+       ========================= */
+
+    .footer {
+      margin-top: 48px;
+      padding-top: 22px;
+
+      border-top:
+        1px solid rgba(255,255,255,.06);
+
+      text-align: center;
+      color: #666;
+      font-size: 11px;
+    }
+
+    /* =========================
+       MOBILE / TABLET
+       ========================= */
+
+    @media (max-width: 900px) {
+      .games-grid,
+      .skeleton-grid {
+        grid-template-columns:
+          repeat(2, minmax(0,1fr));
+      }
+
+      .dashboard {
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+      .profile-panel {
+        grid-column: 1 / -1;
+      }
+
+      .recent-grid {
+        grid-template-columns:
+          repeat(3, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width:
+          min(100% - 22px, 1180px);
+
+        padding-top: 24px;
+      }
+
+      .topbar {
+        padding-left:
+          max(11px, env(safe-area-inset-left));
+
+        padding-right:
+          max(11px, env(safe-area-inset-right));
+      }
+
+      .logo-text {
+        display: none;
+      }
+
+      .top-actions {
+        gap: 6px;
+      }
+
+      .icon-btn {
+        width: 42px;
+        min-height: 42px;
+      }
+
+      .top-btn {
+        min-height: 42px;
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      .dashboard {
+        grid-template-columns:
+          repeat(3,1fr);
+
+        gap: 8px;
+      }
+
+      .profile-panel {
+        grid-column: 1 / -1;
+      }
+
+      .stat {
+        padding: 11px 5px;
+      }
+
+      .stat-number {
+        font-size: 20px;
+      }
+
+      .featured {
+        min-height: 300px;
+      }
+
+      .featured-content {
+        padding: 20px;
+      }
+
+      .featured::after {
+        background:
+          linear-gradient(
+            to top,
+            rgba(0,0,0,.95),
+            rgba(0,0,0,.25)
+          );
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .random-btn {
+        width: 100%;
+      }
+
+      .games-grid,
+      .skeleton-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .game-image-wrap {
+        height: 200px;
+      }
+
+      .recent-grid {
+        grid-template-columns:
+          repeat(2, minmax(0,1fr));
+      }
+
+      .theme-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal {
+        max-height: 88dvh;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-panel {
+        grid-column: auto;
+      }
+
+      .stat {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .stat-number {
+        order: 2;
+      }
+
+      .top-btn.logout-text {
+        font-size: 0;
+        width: 42px;
+        padding: 0;
+      }
+
+      .top-btn.logout-text::after {
+        content: "↪";
+        font-size: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* =========================
+       PLATFORM UPGRADES
+       ========================= */
+
+    body.light-mode {
+      --bg2: #eef1f5;
+      --bg3: #dfe4ea;
+      --card: rgba(255,255,255,.92);
+      --card2: #ffffff;
+      --text: #111;
+      --muted: #60646b;
+      color: var(--text);
+    }
+
+    body.light-mode .topbar,
+    body.light-mode .panel,
+    body.light-mode .modal,
+    body.light-mode .search,
+    body.light-mode .random-btn,
+    body.light-mode .filter,
+    body.light-mode .icon-btn,
+    body.light-mode .top-btn,
+    body.light-mode .game-card,
+    body.light-mode .setting-row select,
+    body.light-mode .setting-row input,
+    body.light-mode .change,
+    body.light-mode .upgrade-card,
+    body.light-mode .launcher-bar,
+    body.light-mode .achievement-card,
+    body.light-mode .suggestion-box,
+    body.light-mode .rating-box {
+      background: rgba(255,255,255,.94);
+      color: #111;
+    }
+
+    body.light-mode .modal-note,
+    body.light-mode .game-category,
+    body.light-mode .section-header span,
+    body.light-mode .profile-copy small,
+    body.light-mode .stat-label {
+      color: #666;
+    }
+
+    .mini-section {
+      margin-top: 24px;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .upgrade-card {
+      position: relative;
+      overflow: hidden;
+      padding: 16px;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: 15px;
+
+      background:
+        rgba(20,20,20,.75);
+
+      cursor: pointer;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .upgrade-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+
+        box-shadow:
+          0 12px 28px rgba(0,0,0,.28),
+          0 0 18px var(--glow);
+      }
+    }
+
+    .upgrade-card small {
+      color: var(--muted);
+    }
+
+    .upgrade-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+
+      margin-top: 5px;
+      font-weight: 900;
+    }
+
+    .upgrade-sub {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .achievement-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .achievement-card {
+      display: grid;
+
+      grid-template-columns:
+        44px 1fr auto;
+
+      align-items: center;
+      gap: 10px;
+
+      padding: 12px;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: 12px;
+      background: #1d1d1d;
+    }
+
+    .achievement-card.locked {
+      opacity: .45;
+      filter: grayscale(.7);
+    }
+
+    .achievement-icon {
+      font-size: 26px;
+      text-align: center;
+    }
+
+    .achievement-card strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .achievement-card span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .achievement-state {
+      color: var(--accent2) !important;
+      font-weight: 900;
+    }
+
+    .rating-box {
+      margin-top: 16px;
+      padding: 13px;
+
+      border-radius: 12px;
+      background: #1d1d1d;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+    }
+
+    .stars {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .star-btn {
+      border: 0;
+      background: transparent;
+      font-size: 25px;
+      cursor: pointer;
+      color: #555;
+      padding: 2px;
+    }
+
+    .star-btn.active {
+      color: #ffd84d;
+    }
+
+    .controls-list {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .control-pill {
+      padding: 9px 10px;
+      border-radius: 9px;
+
+      background:
+        rgba(255,255,255,.05);
+
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .suggestion-box textarea {
+      width: 100%;
+      min-height: 130px;
+
+      resize: vertical;
+      margin-top: 10px;
+      padding: 12px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 11px;
+      background: #202020;
+      color: white;
+
+      font: inherit;
+      outline: none;
+    }
+
+    .suggestion-box textarea:focus {
+      border-color: var(--accent);
+
+      box-shadow:
+        0 0 0 3px var(--glow);
+    }
+
+    .suggestion-count {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .launcher {
+      position: fixed;
+      inset: 0;
+      z-index: 30000;
+
+      display: none;
+      flex-direction: column;
+
+      background: #050505;
+    }
+
+    .launcher.show {
+      display: flex;
+      animation: launcherIn .35s ease;
+    }
+
+    @keyframes launcherIn {
+      from {
+        opacity: 0;
+        transform: scale(.985);
+      }
+    }
+
+    .launcher-bar {
+      min-height: 58px;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      padding:
+        max(8px, env(safe-area-inset-top))
+        max(10px, env(safe-area-inset-right))
+        8px
+        max(10px, env(safe-area-inset-left));
+
+      background:
+        rgba(14,14,14,.97);
+
+      border-bottom:
+        1px solid rgba(255,255,255,.08);
+    }
+
+    .launcher-title {
+      min-width: 0;
+      flex: 1;
+      font-weight: 900;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .launcher-btn {
+      min-width: 42px;
+      min-height: 42px;
+      padding: 0 11px;
+
+      border:
+        1px solid rgba(255,255,255,.1);
+
+      border-radius: 10px;
+
+      background: #1d1d1d;
+      color: white;
+
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .launcher iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      flex: 1;
+      background: #000;
+    }
+
+    .news-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .news-item {
+      padding: 13px;
+
+      border:
+        1px solid rgba(255,255,255,.07);
+
+      border-radius: 12px;
+      background: #1d1d1d;
+    }
+
+    .news-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .news-item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .accent-picker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .accent-picker input[type="color"] {
+      width: 48px;
+      height: 40px;
+      padding: 2px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .kbd-tip {
+      margin-top: 13px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .kbd {
+      display: inline-block;
+      padding: 2px 6px;
+
+      border:
+        1px solid rgba(255,255,255,.13);
+
+      border-radius: 6px;
+
+      background:
+        rgba(255,255,255,.05);
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    @media (max-width: 700px) {
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls-list {
+        grid-template-columns: 1fr;
+      }
+
+      .launcher-btn .launcher-label {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="wrap nav">
-     <a class="brand" href="/games">🍉 Watermelon Games</a>
-      <form action="/logout" method="post">
-        <button class="button secondary" type="submit">Log out</button>
-      </form>
+
+<body data-theme="red">
+
+  <!-- LOADING SCREEN -->
+
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">🍉</div>
+      <div class="loader-title">Watermelon Games</div>
+
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
     </div>
+  </div>
+
+  <!-- BACKGROUND -->
+
+  <div class="grid-bg"></div>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div id="cursorGlow"></div>
+
+  <!-- TOP NAVIGATION -->
+
+  <header class="topbar" id="topbar">
+
+    <div class="logo">
+      <div class="logo-icon" id="logoIcon">
+        🍉
+      </div>
+
+      <div class="logo-text">
+        Watermelon <strong>Games</strong>
+      </div>
+    </div>
+
+    <div class="top-actions">
+
+      <button
+        class="icon-btn"
+        id="achievementsButton"
+        type="button"
+        title="Achievements"
+      >
+        🏅
+      </button>
+
+      <button
+        class="icon-btn"
+        id="suggestButton"
+        type="button"
+        title="Suggest something"
+      >
+        💡
+      </button>
+
+      <button
+        class="icon-btn"
+        id="changeLogButton"
+        type="button"
+        title="What's new"
+      >
+        📰
+      </button>
+
+      <button
+        class="icon-btn"
+        id="settingsButton"
+        type="button"
+        title="Settings"
+      >
+        ⚙️
+      </button>
+
+      <form
+        method="POST"
+        action="/logout"
+      >
+        <button
+          class="top-btn logout-text"
+          type="submit"
+        >
+          Logout
+        </button>
+      </form>
+
+    </div>
+
   </header>
 
-  <main class="wrap">
-    <section class="games-hero">
-      <p class="eyebrow">Private area</p>
-      <h1>Watermelon Games</h1>
-      <p class="lead"><p class="lead">Choose a game and start playing.</p></p>
+  <!-- MAIN PAGE -->
+
+  <main class="container">
+
+    <section class="hero-heading">
+
+      <h1>
+        Watermelon Games
+      </h1>
+
+      <p>
+        Pick a game and start playing.
+      </p>
+
+      <div class="line"></div>
+
     </section>
 
-<section class="game-grid">
+    <!-- PROFILE / STATS -->
 
- <a class="game-card" href="/play/granny">
-  <div class="game-image">
-    <img src="/images/granny.png" alt="Granny">
-  </div>
-  <span>Granny</span>
-</a>
+    <section class="dashboard">
 
-  <a class="game-card" href="#">
-    <div class="game-image">GAME 2</div>
-    <span>Coming Soon</span>
-  </a>
+      <div class="panel profile-panel">
 
-  <a class="game-card" href="#">
-    <div class="game-image">GAME 3</div>
-    <span>Coming Soon</span>
-  </a>
+        <div
+          class="profile-avatar"
+          id="profileAvatar"
+        >
+          🍉
+        </div>
 
-  <a class="game-card" href="#">
-    <div class="game-image">GAME 4</div>
-    <span>Coming Soon</span>
-  </a>
+        <div class="profile-copy">
 
-  <a class="game-card" href="#">
-    <div class="game-image">GAME 5</div>
-    <span>Coming Soon</span>
-  </a>
+          <small>
+            Playing as
+          </small>
 
-  <a class="game-card" href="#">
-    <div class="game-image">GAME 6</div>
-    <span>Coming Soon</span>
-  </a>
+          <div
+            class="profile-name"
+            id="profileName"
+          >
+            Player
+          </div>
 
-</section>
+        </div>
+
+        <button
+          class="edit-profile"
+          id="editProfileButton"
+          type="button"
+          title="Edit profile"
+        >
+          ✎
+        </button>
+
+      </div>
+
+      <div class="panel stat">
+
+        <span
+          class="stat-number"
+          id="totalGamesStat"
+        >
+          3
+        </span>
+
+        <span class="stat-label">
+          Games
+        </span>
+
+      </div>
+
+      <div class="panel stat">
+
+        <span
+          class="stat-number"
+          id="favoritesStat"
+        >
+          0
+        </span>
+
+        <span class="stat-label">
+          Favorites
+        </span>
+
+      </div>
+
+      <div class="panel stat">
+
+        <span
+          class="stat-number"
+          id="playedStat"
+        >
+          0
+        </span>
+
+        <span class="stat-label">
+          Played
+        </span>
+
+      </div>
+
+    </section>
+
+    <!-- CONTINUE / MOST PLAYED -->
+
+    <section class="mini-section">
+
+      <div class="mini-grid">
+
+        <div
+          class="upgrade-card"
+          id="continueCard"
+        >
+
+          <small>
+            📌 Continue Playing
+          </small>
+
+          <div class="upgrade-title">
+
+            <span id="continueName">
+              No recent game yet
+            </span>
+
+            <span>
+              →
+            </span>
+
+          </div>
+
+          <div
+            class="upgrade-sub"
+            id="continueSub"
+          >
+            Play a game and it will appear here.
+          </div>
+
+        </div>
+
+        <div
+          class="upgrade-card"
+          id="mostPlayedCard"
+        >
+
+          <small>
+            🔥 Most Played
+          </small>
+
+          <div class="upgrade-title">
+
+            <span id="mostPlayedName">
+              No plays yet
+            </span>
+
+            <span>
+              ★
+            </span>
+
+          </div>
+
+          <div
+            class="upgrade-sub"
+            id="mostPlayedSub"
+          >
+            Your most launched game will appear here.
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ANNOUNCEMENT -->
+
+    <div
+      class="announcement"
+      id="newsButton"
+      role="button"
+      tabindex="0"
+    >
+
+      <div class="announcement-icon">
+        📢
+      </div>
+
+      <div>
+
+        <strong>
+          Watermelon Games Update
+        </strong>
+
+        <span>
+          Achievements, ratings, Continue Playing,
+          suggestions and more are now available.
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- FEATURED GAME -->
+
+    <section
+      class="featured"
+      id="featuredGame"
+    >
+
+      <img
+        class="featured-image"
+        src="/images/granny.png"
+        alt="Granny"
+      >
+
+      <div class="featured-content">
+
+        <div class="featured-label">
+          FEATURED
+        </div>
+
+        <h2>
+          Granny
+        </h2>
+
+        <p>
+          Escape the house while staying quiet.
+          Explore carefully and try not to get caught.
+        </p>
+
+        <div class="action-row">
+
+          <button
+            class="primary-btn"
+            id="featuredPlay"
+            type="button"
+          >
+            ▶ Play Granny
+          </button>
+
+          <button
+            class="secondary-btn"
+            id="featuredInfo"
+            type="button"
+          >
+            More Info
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+        <!-- SEARCH -->
+
+    <div class="controls">
+
+      <div class="search">
+
+        <span>⌕</span>
+
+        <input
+          id="gameSearch"
+          type="search"
+          autocomplete="off"
+          placeholder="Search games..."
+        >
+
+      </div>
+
+      <button
+        class="random-btn"
+        id="randomGame"
+        type="button"
+      >
+        🎲 Random Game
+      </button>
+
+    </div>
+
+    <!-- FILTERS -->
+
+    <div
+      class="filters"
+      id="filters"
+    >
+
+      <button
+        class="filter active"
+        data-filter="all"
+        type="button"
+      >
+        All
+      </button>
+
+      <button
+        class="filter"
+        data-filter="favorites"
+        type="button"
+      >
+        ❤️ Favorites
+      </button>
+
+      <button
+        class="filter"
+        data-filter="Horror"
+        type="button"
+      >
+        👻 Horror
+      </button>
+
+      <button
+        class="filter"
+        data-filter="Driving"
+        type="button"
+      >
+        🚗 Driving
+      </button>
+
+      <button
+        class="filter"
+        data-filter="Idle"
+        type="button"
+      >
+        🍪 Idle
+      </button>
+
+    </div>
+
+    <!-- RECENTLY PLAYED -->
+
+    <section
+      id="recentSection"
+      style="display:none;"
+    >
+
+      <div class="section-header">
+
+        <h2>
+          Recently Played
+        </h2>
+
+        <span>
+          Your latest games
+        </span>
+
+      </div>
+
+      <div
+        class="recent-grid"
+        id="recentGrid"
+      ></div>
+
+    </section>
+
+    <!-- ALL GAMES -->
+
+    <section>
+
+      <div class="section-header">
+
+        <h2>
+          All Games
+        </h2>
+
+        <span id="gameCount">
+          3 games
+        </span>
+
+      </div>
+
+      <!-- SKELETON LOADING -->
+
+      <div
+        class="skeleton-grid"
+        id="skeletonGrid"
+      >
+
+        <div class="skeleton-card"></div>
+
+        <div class="skeleton-card"></div>
+
+        <div class="skeleton-card"></div>
+
+      </div>
+
+      <!-- GAME CARDS -->
+
+      <div
+        class="games-grid"
+        id="gamesGrid"
+      ></div>
+
+      <!-- EMPTY SEARCH STATE -->
+
+      <div
+        class="empty"
+        id="emptyState"
+      >
+
+        <div class="empty-icon">
+          🔎
+        </div>
+
+        <strong>
+          No games found
+        </strong>
+
+        <div style="margin-top:5px;">
+          Try another search or category.
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+      <div>
+        🍉 Watermelon Games
+      </div>
+
+      <div style="margin-top:5px;">
+        Built for gaming.
+      </div>
+
+    </footer>
+
   </main>
+
+  <!-- =========================
+       SETTINGS
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="settingsOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        ⚙️ Settings
+      </h2>
+
+      <p class="modal-note">
+        Customize Watermelon Games on this device.
+      </p>
+
+      <div class="setting-row">
+
+        <div>
+
+          <strong>
+            Theme
+          </strong>
+
+          <div class="modal-note">
+            Choose the main site theme.
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="theme-grid">
+
+        <button
+          class="theme-choice"
+          data-theme="red"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🍉
+          </span>
+
+          <span>
+            <strong>
+              Watermelon
+            </strong>
+
+            <small>
+              Red
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="green"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🥝
+          </span>
+
+          <span>
+            <strong>
+              Kiwi
+            </strong>
+
+            <small>
+              Green
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="blue"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🫐
+          </span>
+
+          <span>
+            <strong>
+              Blueberry
+            </strong>
+
+            <small>
+              Blue
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="purple"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🍇
+          </span>
+
+          <span>
+            <strong>
+              Grape
+            </strong>
+
+            <small>
+              Purple
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="orange"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🍊
+          </span>
+
+          <span>
+            <strong>
+              Orange
+            </strong>
+
+            <small>
+              Orange
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="pink"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🍓
+          </span>
+
+          <span>
+            <strong>
+              Strawberry
+            </strong>
+
+            <small>
+              Pink
+            </small>
+          </span>
+
+        </button>
+
+        <button
+          class="theme-choice"
+          data-theme="yellow"
+          type="button"
+        >
+
+          <span class="theme-emoji">
+            🍋
+          </span>
+
+          <span>
+            <strong>
+              Lemon
+            </strong>
+
+            <small>
+              Yellow
+            </small>
+          </span>
+
+        </button>
+
+      </div>
+
+      <!-- SOUND -->
+
+      <div class="setting-row">
+
+        <div>
+
+          <strong>
+            Sound Effects
+          </strong>
+
+          <div class="modal-note">
+            Button and menu sounds.
+          </div>
+
+        </div>
+
+        <select id="soundSetting">
+
+          <option value="on">
+            On
+          </option>
+
+          <option value="off">
+            Off
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- ANIMATIONS -->
+
+      <div class="setting-row">
+
+        <div>
+
+          <strong>
+            Animations
+          </strong>
+
+          <div class="modal-note">
+            Reduce effects on slower devices.
+          </div>
+
+        </div>
+
+        <select id="animationSetting">
+
+          <option value="normal">
+            Normal
+          </option>
+
+          <option value="reduced">
+            Reduced
+          </option>
+
+          <option value="off">
+            Off
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- APPEARANCE -->
+
+      <div class="setting-row">
+
+        <div>
+
+          <strong>
+            Appearance
+          </strong>
+
+          <div class="modal-note">
+            Dark or light interface.
+          </div>
+
+        </div>
+
+        <select id="appearanceSetting">
+
+          <option value="dark">
+            Dark
+          </option>
+
+          <option value="light">
+            Light
+          </option>
+
+        </select>
+
+      </div>
+
+      <!-- CUSTOM ACCENT -->
+
+      <div class="setting-row">
+
+        <div>
+
+          <strong>
+            Custom Accent
+          </strong>
+
+          <div class="modal-note">
+            Choose your own highlight colour.
+          </div>
+
+        </div>
+
+        <div class="accent-picker">
+
+          <input
+            id="accentPicker"
+            type="color"
+            value="#ff3154"
+          >
+
+          <button
+            class="secondary-btn"
+            id="resetAccent"
+            type="button"
+          >
+            Reset
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="kbd-tip">
+
+        Keyboard shortcuts:
+
+        <span class="kbd">
+          /
+        </span>
+
+        search,
+
+        <span class="kbd">
+          R
+        </span>
+
+        random game,
+
+        <span class="kbd">
+          A
+        </span>
+
+        achievements,
+
+        <span class="kbd">
+          Esc
+        </span>
+
+        close.
+
+      </div>
+
+      <button
+        class="modal-close"
+        data-close="settingsOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       PROFILE EDITOR
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="profileOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        👤 Edit Profile
+      </h2>
+
+      <p class="modal-note">
+        Your profile is saved on this device.
+      </p>
+
+      <input
+        class="profile-input"
+        id="profileNameInput"
+        maxlength="20"
+        placeholder="Enter a display name"
+      >
+
+      <div class="avatar-options">
+
+        <button
+          class="avatar-choice"
+          data-avatar="🍉"
+          type="button"
+        >
+          🍉
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="🎮"
+          type="button"
+        >
+          🎮
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="😎"
+          type="button"
+        >
+          😎
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="👾"
+          type="button"
+        >
+          👾
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="🔥"
+          type="button"
+        >
+          🔥
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="⭐"
+          type="button"
+        >
+          ⭐
+        </button>
+
+        <button
+          class="avatar-choice"
+          data-avatar="💀"
+          type="button"
+        >
+          💀
+        </button>
+
+      </div>
+
+      <button
+        class="primary-btn"
+        id="saveProfile"
+        type="button"
+        style="width:100%;"
+      >
+        Save Profile
+      </button>
+
+      <button
+        class="modal-close"
+        data-close="profileOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       CHANGELOG
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="changeLogOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        📰 What's New
+      </h2>
+
+      <p class="modal-note">
+        Latest Watermelon Games changes.
+      </p>
+
+      <div class="change">
+
+        <strong>
+          Platform Upgrade
+        </strong>
+
+        <span>
+          Added achievements, ratings,
+          Continue Playing and Most Played.
+        </span>
+
+      </div>
+
+      <div class="change">
+
+        <strong>
+          Suggestion Box
+        </strong>
+
+        <span>
+          Players can now suggest games,
+          themes, features and improvements.
+        </span>
+
+      </div>
+
+      <div class="change">
+
+        <strong>
+          Better Game Launcher
+        </strong>
+
+        <span>
+          Games now open inside a dedicated
+          Watermelon Games launcher.
+        </span>
+
+      </div>
+
+      <div class="change">
+
+        <strong>
+          More Customization
+        </strong>
+
+        <span>
+          Added custom accent colours and
+          light/dark appearance settings.
+        </span>
+
+      </div>
+
+      <button
+        class="modal-close"
+        data-close="changeLogOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       GAME INFO
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="infoOverlay"
+  >
+
+    <div class="modal">
+
+      <div id="infoContent"></div>
+
+      <button
+        class="modal-close"
+        data-close="infoOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       ACHIEVEMENTS
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="achievementsOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        🏅 Achievements
+      </h2>
+
+      <p class="modal-note">
+        Achievements are saved on this device.
+      </p>
+
+      <div
+        class="achievement-grid"
+        id="achievementGrid"
+      ></div>
+
+      <button
+        class="modal-close"
+        data-close="achievementsOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       SUGGESTIONS
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="suggestOverlay"
+  >
+
+    <div class="modal suggestion-box">
+
+      <h2>
+        💡 Suggest Something
+      </h2>
+
+      <p class="modal-note">
+        Suggest a game, feature, theme,
+        improvement or anything else
+        for Watermelon Games.
+      </p>
+
+      <select
+        id="suggestionType"
+        style="
+          width:100%;
+          min-height:44px;
+          border:1px solid rgba(255,255,255,.1);
+          border-radius:10px;
+          background:#202020;
+          color:white;
+          padding:8px 10px;
+        "
+      >
+
+        <option value="Game">
+          Game suggestion
+        </option>
+
+        <option value="Feature">
+          Feature suggestion
+        </option>
+
+        <option value="Theme">
+          Theme suggestion
+        </option>
+
+        <option value="Bug">
+          Bug report
+        </option>
+
+        <option value="Other">
+          Other
+        </option>
+
+      </select>
+
+      <textarea
+        id="suggestionText"
+        maxlength="500"
+        placeholder="Tell us what you want added..."
+      ></textarea>
+
+      <div class="suggestion-count">
+
+        <span id="suggestionCount">
+          0
+        </span>/500
+
+      </div>
+
+      <button
+        class="primary-btn"
+        id="submitSuggestion"
+        type="button"
+        style="
+          width:100%;
+          margin-top:10px;
+        "
+      >
+        Send Suggestion
+      </button>
+
+      <button
+        class="modal-close"
+        data-close="suggestOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       NEWS
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="newsOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        📰 Watermelon News
+      </h2>
+
+      <div class="news-list">
+
+        <div class="news-item">
+
+          <strong>
+            Platform Upgrade
+          </strong>
+
+          <span>
+            Achievements, ratings,
+            Continue Playing, Most Played,
+            custom colours and the new
+            game launcher are now available.
+          </span>
+
+        </div>
+
+        <div class="news-item">
+
+          <strong>
+            Suggestion Box
+          </strong>
+
+          <span>
+            You can now send ideas directly
+            from the Watermelon Games site.
+          </span>
+
+        </div>
+
+        <div class="news-item">
+
+          <strong>
+            Mobile & iPad
+          </strong>
+
+          <span>
+            The interface and launcher are
+            designed for touch devices as
+            well as desktop.
+          </span>
+
+        </div>
+
+      </div>
+
+      <button
+        class="modal-close"
+        data-close="newsOverlay"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       FIRST VISIT THEME
+       ========================= -->
+
+  <div
+    class="overlay"
+    id="welcomeOverlay"
+  >
+
+    <div class="modal">
+
+      <h2>
+        🍉 Welcome to Watermelon Games
+      </h2>
+
+      <p class="modal-note">
+        Choose your starting theme.
+        You can change this later in Settings.
+      </p>
+
+      <div class="theme-grid">
+
+        <button
+          class="theme-choice welcome-theme"
+          data-theme="red"
+          type="button"
+        >
+          <span class="theme-emoji">
+            🍉
+          </span>
+
+          <span>
+            <strong>
+              Watermelon
+            </strong>
+
+            <small>
+              Red
+            </small>
+          </span>
+        </button>
+
+        <button
+          class="theme-choice welcome-theme"
+          data-theme="green"
+          type="button"
+        >
+          <span class="theme-emoji">
+            🥝
+          </span>
+
+          <span>
+            <strong>
+              Kiwi
+            </strong>
+
+            <small>
+              Green
+            </small>
+          </span>
+        </button>
+
+        <button
+          class="theme-choice welcome-theme"
+          data-theme="blue"
+          type="button"
+        >
+          <span class="theme-emoji">
+            🫐
+          </span>
+
+          <span>
+            <strong>
+              Blueberry
+            </strong>
+
+            <small>
+              Blue
+            </small>
+          </span>
+        </button>
+
+        <button
+          class="theme-choice welcome-theme"
+          data-theme="purple"
+          type="button"
+        >
+          <span class="theme-emoji">
+            🍇
+          </span>
+
+          <span>
+            <strong>
+              Grape
+            </strong>
+
+            <small>
+              Purple
+            </small>
+          </span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+    <!-- =========================
+       UNIVERSAL GAME LAUNCHER
+       ========================= -->
+
+  <div
+    class="launcher"
+    id="gameLauncher"
+  >
+
+    <div class="launcher-bar">
+
+      <button
+        class="launcher-btn"
+        id="launcherHome"
+        type="button"
+      >
+        ←
+        <span class="launcher-label">
+          Home
+        </span>
+      </button>
+
+      <div
+        class="launcher-title"
+        id="launcherTitle"
+      >
+        Game
+      </div>
+
+      <button
+        class="launcher-btn"
+        id="launcherReload"
+        type="button"
+      >
+        ↻
+        <span class="launcher-label">
+          Reload
+        </span>
+      </button>
+
+      <button
+        class="launcher-btn"
+        id="launcherFullscreen"
+        type="button"
+      >
+        ⛶
+        <span class="launcher-label">
+          Fullscreen
+        </span>
+      </button>
+
+      <button
+        class="launcher-btn"
+        id="launcherClose"
+        type="button"
+      >
+        ✕
+      </button>
+
+    </div>
+
+    <iframe
+      id="launcherFrame"
+      title="Game"
+      allowfullscreen
+    ></iframe>
+
+  </div>
+
+  <!-- =========================
+       TOAST NOTIFICATIONS
+       ========================= -->
+
+  <div
+    class="toast-box"
+    id="toastBox"
+  ></div>
+
+  <!-- =========================
+       GAME LAUNCH TRANSITION
+       ========================= -->
+
+  <div
+    class="launch-screen"
+    id="launchScreen"
+  >
+
+    <div class="launch-inner">
+
+      <div
+        class="launch-emoji"
+        id="launchEmoji"
+      >
+        🍉
+      </div>
+
+      <div
+        class="launch-title"
+        id="launchTitle"
+      >
+        Loading Game...
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- =========================
+       JAVASCRIPT
+       ========================= -->
+
+  <script>
+
+    /* =========================
+       GAMES
+       ========================= */
+
+    const games = [
+
+      {
+        id: "granny",
+
+        name: "Granny",
+
+        category: "Horror",
+
+        image:
+          "/images/granny.png",
+
+        url:
+          "/play/granny",
+
+        badge:
+          "POPULAR",
+
+        description:
+          "Escape Granny's house without making too much noise. Explore, solve puzzles and find a way out before she catches you."
+      },
+
+      {
+        id: "slowroads",
+
+        name: "Slow Roads",
+
+        category: "Driving",
+
+        image:
+          "/images/slowroads.png",
+
+        url:
+          "/play/slowroads",
+
+        badge:
+          "RELAX",
+
+        description:
+          "Drive through an endless peaceful landscape and enjoy a relaxing road trip."
+      },
+
+      {
+        id: "cookieclicker",
+
+        name: "Cookie Clicker",
+
+        category: "Idle",
+
+        image:
+          "/images/cookie%20clicker.png",
+
+        url:
+          "/play/cookieclicker",
+
+        badge:
+          "CLASSIC",
+
+        description:
+          "Click cookies, buy upgrades and build a huge cookie empire."
+      },
+      
+      {
+  id: "bitlife",
+
+  name: "BitLife",
+
+  category: "Simulation",
+
+  image:
+    "/images/bitlife_logo.png",
+
+  url:
+    "/play/bitlife",
+
+  badge:
+    "NEW",
+
+  description:
+    "Live a virtual life, make choices, build relationships and see where your decisions take you."
+},
+
+    ];
+
+    /* =========================
+       THEMES
+       ========================= */
+
+    const themeData = {
+
+      red: {
+        emoji: "🍉",
+        color: "#ff3154"
+      },
+
+      green: {
+        emoji: "🥝",
+        color: "#48d96f"
+      },
+
+      blue: {
+        emoji: "🫐",
+        color: "#3c8cff"
+      },
+
+      purple: {
+        emoji: "🍇",
+        color: "#9b5cff"
+      },
+
+      orange: {
+        emoji: "🍊",
+        color: "#ff8a2b"
+      },
+
+      pink: {
+        emoji: "🍓",
+        color: "#ff55b8"
+      },
+
+      yellow: {
+        emoji: "🍋",
+        color: "#f4d83a"
+      }
+
+    };
+
+    /* =========================
+       SAVED DATA
+       ========================= */
+
+    let favorites = [];
+
+    let recent = [];
+
+    try {
+
+      favorites =
+        JSON.parse(
+          localStorage.getItem(
+            "wmFavorites"
+          ) || "[]"
+        );
+
+    } catch {
+
+      favorites = [];
+
+    }
+
+    try {
+
+      recent =
+        JSON.parse(
+          localStorage.getItem(
+            "wmRecent"
+          ) || "[]"
+        );
+
+    } catch {
+
+      recent = [];
+
+    }
+
+    let currentFilter =
+      "all";
+
+    let selectedAvatar =
+      localStorage.getItem(
+        "wmAvatar"
+      ) || "🍉";
+
+    /* =========================
+       PAGE ELEMENTS
+       ========================= */
+
+    const gamesGrid =
+      document.getElementById(
+        "gamesGrid"
+      );
+
+    const recentGrid =
+      document.getElementById(
+        "recentGrid"
+      );
+
+    const recentSection =
+      document.getElementById(
+        "recentSection"
+      );
+
+    const search =
+      document.getElementById(
+        "gameSearch"
+      );
+
+    const gameCount =
+      document.getElementById(
+        "gameCount"
+      );
+
+    const totalGamesStat =
+      document.getElementById(
+        "totalGamesStat"
+      );
+
+    const favoritesStat =
+      document.getElementById(
+        "favoritesStat"
+      );
+
+    const playedStat =
+      document.getElementById(
+        "playedStat"
+      );
+
+    const settingsOverlay =
+      document.getElementById(
+        "settingsOverlay"
+      );
+
+    const profileOverlay =
+      document.getElementById(
+        "profileOverlay"
+      );
+
+    const infoOverlay =
+      document.getElementById(
+        "infoOverlay"
+      );
+
+    const changeLogOverlay =
+      document.getElementById(
+        "changeLogOverlay"
+      );
+
+    const welcomeOverlay =
+      document.getElementById(
+        "welcomeOverlay"
+      );
+
+    const launchScreen =
+      document.getElementById(
+        "launchScreen"
+      );
+
+    const launchTitle =
+      document.getElementById(
+        "launchTitle"
+      );
+
+    const launchEmoji =
+      document.getElementById(
+        "launchEmoji"
+      );
+
+    const logoIcon =
+      document.getElementById(
+        "logoIcon"
+      );
+
+    const soundSetting =
+      document.getElementById(
+        "soundSetting"
+      );
+
+    const animationSetting =
+      document.getElementById(
+        "animationSetting"
+      );
+
+    /* =========================
+       BASIC STATS
+       ========================= */
+
+    totalGamesStat.textContent =
+      games.length;
+
+    /* =========================
+       CREATE GAME CARD
+       ========================= */
+
+    function makeCard(game) {
+
+      const favorite =
+        favorites.includes(
+          game.id
+        );
+
+      const card =
+        document.createElement(
+          "article"
+        );
+
+      card.className =
+        "game-card";
+
+      card.dataset.game =
+        game.id;
+
+      card.innerHTML = `
+        <div class="game-image-wrap">
+
+          <img
+            class="game-image"
+            src="${game.image}"
+            alt="${game.name}"
+            loading="lazy"
+          >
+
+          <div class="card-shine"></div>
+
+          ${
+            game.badge
+              ? `
+                <div class="badge">
+                  ${game.badge}
+                </div>
+              `
+              : ""
+          }
+
+          <button
+            class="favorite-btn ${
+              favorite
+                ? "active"
+                : ""
+            }"
+            type="button"
+            title="Favorite ${game.name}"
+          >
+            ${
+              favorite
+                ? "♥"
+                : "♡"
+            }
+          </button>
+
+        </div>
+
+        <div class="game-content">
+
+          <div class="game-title-row">
+
+            <h3 class="game-title">
+              ${game.name}
+            </h3>
+
+            <button
+              class="info-btn"
+              type="button"
+              title="Game information"
+            >
+              i
+            </button>
+
+          </div>
+
+          <div class="game-category">
+            ${game.category}
+          </div>
+
+          <div class="game-description">
+            ${game.description}
+          </div>
+
+          <button
+            class="play-btn"
+            type="button"
+          >
+            ▶ Play
+          </button>
+
+        </div>
+      `;
+
+      /* PLAY BUTTON */
+
+      card
+        .querySelector(
+          ".play-btn"
+        )
+        .addEventListener(
+          "click",
+          event => {
+
+            createRipple(
+              event
+            );
+
+            playSound();
+
+            launchGame(
+              game
+            );
+
+          }
+        );
+
+      /* FAVORITE */
+
+      card
+        .querySelector(
+          ".favorite-btn"
+        )
+        .addEventListener(
+          "click",
+          event => {
+
+            event.stopPropagation();
+
+            playSound();
+
+            toggleFavorite(
+              game.id
+            );
+
+          }
+        );
+
+      /* INFO */
+
+      card
+        .querySelector(
+          ".info-btn"
+        )
+        .addEventListener(
+          "click",
+          event => {
+
+            event.stopPropagation();
+
+            playSound();
+
+            openGameInfo(
+              game
+            );
+
+          }
+        );
+
+      addTilt(
+        card
+      );
+
+      return card;
+    }
+
+    /* =========================
+       RIPPLE EFFECT
+       ========================= */
+
+    function createRipple(
+      event
+    ) {
+
+      const button =
+        event.currentTarget;
+
+      const circle =
+        document.createElement(
+          "span"
+        );
+
+      const diameter =
+        Math.max(
+          button.clientWidth,
+          button.clientHeight
+        );
+
+      const radius =
+        diameter / 2;
+
+      const rect =
+        button.getBoundingClientRect();
+
+      circle.style.width =
+        `${diameter}px`;
+
+      circle.style.height =
+        `${diameter}px`;
+
+      circle.style.left =
+        `${
+          event.clientX
+          - rect.left
+          - radius
+        }px`;
+
+      circle.style.top =
+        `${
+          event.clientY
+          - rect.top
+          - radius
+        }px`;
+
+      circle.classList.add(
+        "ripple"
+      );
+
+      const oldRipple =
+        button.querySelector(
+          ".ripple"
+        );
+
+      if (
+        oldRipple
+      ) {
+
+        oldRipple.remove();
+
+      }
+
+      button.appendChild(
+        circle
+      );
+
+      setTimeout(
+        () => {
+
+          circle.remove();
+
+        },
+        600
+      );
+    }
+
+    /* =========================
+       RENDER GAMES
+       ========================= */
+
+    function renderGames() {
+
+      gamesGrid.innerHTML =
+        "";
+
+      const query =
+        search.value
+          .toLowerCase()
+          .trim();
+
+      const filtered =
+        games.filter(
+          game => {
+
+            const textMatch =
+              (
+                game.name
+                + " "
+                + game.category
+                + " "
+                + game.description
+              )
+                .toLowerCase()
+                .includes(
+                  query
+                );
+
+            let filterMatch =
+              true;
+
+            if (
+              currentFilter
+              === "favorites"
+            ) {
+
+              filterMatch =
+                favorites.includes(
+                  game.id
+                );
+
+            } else if (
+              currentFilter
+              !== "all"
+            ) {
+
+              filterMatch =
+                game.category
+                === currentFilter;
+
+            }
+
+            return (
+              textMatch
+              &&
+              filterMatch
+            );
+
+          }
+        );
+
+      filtered.forEach(
+        (game, index) => {
+
+          const card =
+            makeCard(
+              game
+            );
+
+          card.style.animationDelay =
+            `${index * 80}ms`;
+
+          gamesGrid.appendChild(
+            card
+          );
+
+        }
+      );
+
+      gameCount.textContent =
+        `${filtered.length} ${
+          filtered.length === 1
+            ? "game"
+            : "games"
+        }`;
+
+      document
+        .getElementById(
+          "emptyState"
+        )
+        .classList.toggle(
+          "show",
+          filtered.length === 0
+        );
+
+      updateStats();
+    }
+
+    /* =========================
+       RECENTLY PLAYED
+       ========================= */
+
+    function renderRecent() {
+
+      recentGrid.innerHTML =
+        "";
+
+      const recentGames =
+        recent
+          .map(
+            id =>
+              games.find(
+                game =>
+                  game.id
+                  === id
+              )
+          )
+          .filter(
+            Boolean
+          );
+
+      if (
+        recentGames.length
+        === 0
+      ) {
+
+        recentSection.style.display =
+          "none";
+
+        return;
+      }
+
+      recentSection.style.display =
+        "block";
+
+      recentGames.forEach(
+        game => {
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className =
+            "recent-card";
+
+          card.innerHTML = `
+            <img
+              src="${game.image}"
+              alt="${game.name}"
+            >
+
+            <strong>
+              ${game.name}
+            </strong>
+          `;
+
+          card.addEventListener(
+            "click",
+            () => {
+
+              playSound();
+
+              launchGame(
+                game
+              );
+
+            }
+          );
+
+          recentGrid.appendChild(
+            card
+          );
+
+        }
+      );
+
+    }
+
+    /* =========================
+       FAVORITES
+       ========================= */
+
+    function toggleFavorite(
+      id
+    ) {
+
+      if (
+        favorites.includes(
+          id
+        )
+      ) {
+
+        favorites =
+          favorites.filter(
+            item =>
+              item !== id
+          );
+
+        toast(
+          "Removed from favorites"
+        );
+
+      } else {
+
+        favorites.unshift(
+          id
+        );
+
+        toast(
+          "Added to favorites ❤️"
+        );
+
+      }
+
+      localStorage.setItem(
+        "wmFavorites",
+        JSON.stringify(
+          favorites
+        )
+      );
+
+      renderGames();
+
+      renderRecent();
+
+      updateStats();
+
+      if (
+        typeof checkAchievements
+        === "function"
+      ) {
+
+        checkAchievements();
+
+      }
+
+    }
+
+    /* =========================
+       STATS
+       ========================= */
+
+    function updateStats() {
+
+      favoritesStat.textContent =
+        favorites.length;
+
+      playedStat.textContent =
+        recent.length;
+
+      totalGamesStat.textContent =
+        games.length;
+
+    }
+
+    /* =========================
+       GAME LAUNCH
+       ========================= */
+
+    function launchGame(
+      game
+    ) {
+
+      recent =
+        recent.filter(
+          id =>
+            id !== game.id
+        );
+
+      recent.unshift(
+        game.id
+      );
+
+      recent =
+        recent.slice(
+          0,
+          5
+        );
+
+      localStorage.setItem(
+        "wmRecent",
+        JSON.stringify(
+          recent
+        )
+      );
+
+      renderRecent();
+
+      updateStats();
+
+      playSound();
+
+      launchTitle.textContent =
+        `Opening ${game.name}...`;
+
+      launchEmoji.textContent =
+        getThemeEmoji();
+
+      launchScreen.classList.add(
+        "show"
+      );
+
+      const delay =
+        animationsEnabled()
+          ? 450
+          : 0;
+
+      setTimeout(
+        () => {
+
+          launchScreen.classList.remove(
+            "show"
+          );
+
+          openLauncher(
+            game
+          );
+
+        },
+        delay
+      );
+
+    }
+
+    /* =========================
+       BASIC GAME INFO
+       ========================= */
+
+    function openGameInfo(
+      game
+    ) {
+
+      document
+        .getElementById(
+          "infoContent"
+        )
+        .innerHTML = `
+
+          <img
+            class="info-image"
+            src="${game.image}"
+            alt="${game.name}"
+          >
+
+          <h2>
+            ${game.name}
+          </h2>
+
+          <p class="modal-note">
+            ${game.description}
+          </p>
+
+          <p>
+            <strong>
+              Category:
+            </strong>
+
+            ${game.category}
+          </p>
+
+          <button
+            class="primary-btn"
+            id="infoPlayButton"
+            type="button"
+            style="width:100%;"
+          >
+            ▶ Play ${game.name}
+          </button>
+        `;
+
+      infoOverlay.classList.add(
+        "show"
+      );
+
+      document
+        .getElementById(
+          "infoPlayButton"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            infoOverlay.classList.remove(
+              "show"
+            );
+
+            launchGame(
+              game
+            );
+
+          }
+        );
+
+    }
+
+    /* =========================
+       TOASTS
+       ========================= */
+
+    function toast(
+      message
+    ) {
+
+      const box =
+        document.getElementById(
+          "toastBox"
+        );
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "toast";
+
+      item.textContent =
+        message;
+
+      box.appendChild(
+        item
+      );
+
+      setTimeout(
+        () => {
+
+          item.classList.add(
+            "hide"
+          );
+
+          setTimeout(
+            () => {
+
+              item.remove();
+
+            },
+            260
+          );
+
+        },
+        2300
+      );
+
+    }
+
+    /* =========================
+       CURRENT THEME EMOJI
+       ========================= */
+
+    function getThemeEmoji() {
+
+      const theme =
+        document.body.dataset.theme;
+
+      return (
+        themeData[
+          theme
+        ]?.emoji
+        || "🍉"
+      );
+
+    }
+
+    /* =========================
+       SET THEME
+       ========================= */
+
+    function setTheme(
+      theme
+    ) {
+
+      if (
+        !themeData[
+          theme
+        ]
+      ) {
+
+        theme =
+          "red";
+
+      }
+
+      document.body.dataset.theme =
+        theme;
+
+      logoIcon.textContent =
+        themeData[
+          theme
+        ].emoji;
+
+      document
+        .querySelector(
+          'meta[name="theme-color"]'
+        )
+        .setAttribute(
+          "content",
+          themeData[
+            theme
+          ].color
+        );
+
+      document
+        .querySelectorAll(
+          ".theme-choice"
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              "active",
+              button.dataset.theme
+              === theme
+            );
+
+          }
+        );
+
+      localStorage.setItem(
+        "wmTheme",
+        theme
+      );
+
+    }
+
+    /* =========================
+       ANIMATIONS
+       ========================= */
+
+    function animationsEnabled() {
+
+      return (
+        localStorage.getItem(
+          "wmAnimations"
+        )
+        !== "off"
+      );
+
+    }
+
+    function applyAnimationSetting(
+      value
+    ) {
+
+      document.body.classList.remove(
+        "animations-off",
+        "animations-reduced"
+      );
+
+      if (
+        value === "off"
+      ) {
+
+        document.body.classList.add(
+          "animations-off"
+        );
+
+      }
+
+      if (
+        value === "reduced"
+      ) {
+
+        document.body.classList.add(
+          "animations-reduced"
+        );
+
+      }
+
+      localStorage.setItem(
+        "wmAnimations",
+        value
+      );
+
+    }
+
+    /* =========================
+       SOUND
+       ========================= */
+
+let audioContext;
+
+function getAudioContext() {
+  if (!audioContext) {
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) return null;
+
+    audioContext = new AudioContext();
+  }
+
+  return audioContext;
+}
+
+function playTone({
+  frequency = 440,
+  duration = 0.08,
+  volume = 0.035,
+  type = "sine",
+  endFrequency = null
+} = {}) {
+
+  if (
+    localStorage.getItem("wmSound") === "off"
+  ) {
+    return;
+  }
+
+  const context = getAudioContext();
+
+  if (!context) return;
+
+  if (context.state === "suspended") {
+    context.resume();
+  }
+
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+
+  oscillator.type = type;
+
+  oscillator.frequency.setValueAtTime(
+    frequency,
+    context.currentTime
+  );
+
+  if (endFrequency) {
+    oscillator.frequency.exponentialRampToValueAtTime(
+      endFrequency,
+      context.currentTime + duration
+    );
+  }
+
+  gain.gain.setValueAtTime(
+    0.0001,
+    context.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    volume,
+    context.currentTime + 0.01
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.0001,
+    context.currentTime + duration
+  );
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+
+  oscillator.start();
+
+  oscillator.stop(
+    context.currentTime + duration + 0.02
+  );
+}
+
+function playSound() {
+  playTone({
+    frequency: 520,
+    endFrequency: 650,
+    duration: 0.055,
+    volume: 0.025,
+    type: "sine"
+  });
+}
+
+function playHoverSound() {
+  playTone({
+    frequency: 760,
+    endFrequency: 820,
+    duration: 0.03,
+    volume: 0.012,
+    type: "sine"
+  });
+}
+
+function playSuccessSound() {
+  playTone({
+    frequency: 520,
+    duration: 0.07,
+    volume: 0.025,
+    type: "sine"
+  });
+
+  setTimeout(() => {
+    playTone({
+      frequency: 660,
+      duration: 0.07,
+      volume: 0.025,
+      type: "sine"
+    });
+  }, 65);
+
+  setTimeout(() => {
+    playTone({
+      frequency: 820,
+      duration: 0.1,
+      volume: 0.03,
+      type: "sine"
+    });
+  }, 130);
+}
+
+function playErrorSound() {
+  playTone({
+    frequency: 260,
+    endFrequency: 180,
+    duration: 0.11,
+    volume: 0.03,
+    type: "triangle"
+  });
+
+  setTimeout(() => {
+    playTone({
+      frequency: 190,
+      endFrequency: 130,
+      duration: 0.13,
+      volume: 0.025,
+      type: "triangle"
+    });
+  }, 90);
+}
+
+function playOpenSound() {
+  playTone({
+    frequency: 430,
+    endFrequency: 610,
+    duration: 0.09,
+    volume: 0.022,
+    type: "sine"
+  });
+}
+
+function playCloseSound() {
+  playTone({
+    frequency: 520,
+    endFrequency: 330,
+    duration: 0.08,
+    volume: 0.02,
+    type: "sine"
+  });
+}
+
+function playLaunchSound() {
+  playTone({
+    frequency: 320,
+    endFrequency: 520,
+    duration: 0.12,
+    volume: 0.03,
+    type: "triangle"
+  });
+
+  setTimeout(() => {
+    playTone({
+      frequency: 520,
+      endFrequency: 880,
+      duration: 0.18,
+      volume: 0.025,
+      type: "sine"
+    });
+  }, 100);
+}
+
+        const context =
+          new AudioContext();
+
+        const oscillator =
+          context.createOscillator();
+
+        const gain =
+          context.createGain();
+
+        oscillator.type =
+          "sine";
+
+        oscillator.frequency.value =
+          420;
+
+        gain.gain.value =
+          0.025;
+
+    /* =========================
+       DESKTOP 3D CARD TILT
+       ========================= */
+
+    function addTilt(
+      card
+    ) {
+
+      const desktop =
+        window.matchMedia(
+          "(hover:hover) and (pointer:fine)"
+        );
+
+      if (
+        !desktop.matches
+      ) {
+
+        return;
+
+      }
+
+      card.addEventListener(
+        "mousemove",
+        event => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+          const x =
+            event.clientX
+            - rect.left;
+
+          const y =
+            event.clientY
+            - rect.top;
+
+          const rotateY =
+            (
+              x
+              - rect.width / 2
+            ) / 25;
+
+          const rotateX =
+            (
+              rect.height / 2
+              - y
+            ) / 25;
+
+          card.style.transform =
+            `
+              translateY(-5px)
+              scale(1.01)
+              rotateX(${rotateX}deg)
+              rotateY(${rotateY}deg)
+            `;
+
+        }
+      );
+
+      card.addEventListener(
+        "mouseleave",
+        () => {
+
+          card.style.transform =
+            "";
+
+        }
+      );
+
+    }
+        /* =========================
+       SEARCH
+       ========================= */
+
+    search.addEventListener(
+      "input",
+      () => {
+        renderGames();
+      }
+    );
+
+    /* =========================
+       FILTER BUTTONS
+       ========================= */
+
+    document
+      .querySelectorAll(
+        ".filter"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              playSound();
+
+              currentFilter =
+                button.dataset.filter;
+
+              document
+                .querySelectorAll(
+                  ".filter"
+                )
+                .forEach(
+                  item => {
+
+                    item.classList.remove(
+                      "active"
+                    );
+
+                  }
+                );
+
+              button.classList.add(
+                "active"
+              );
+
+              renderGames();
+
+            }
+          );
+
+        }
+      );
+
+    /* =========================
+       RANDOM GAME
+       ========================= */
+
+    document
+      .getElementById(
+        "randomGame"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          const random =
+            games[
+              Math.floor(
+                Math.random()
+                * games.length
+              )
+            ];
+
+          launchGame(
+            random
+          );
+
+        }
+      );
+
+    /* =========================
+       FEATURED GAME
+       ========================= */
+
+    const grannyGame =
+      games.find(
+        game =>
+          game.id === "granny"
+      );
+
+    document
+      .getElementById(
+        "featuredPlay"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          launchGame(
+            grannyGame
+          );
+
+        }
+      );
+
+    document
+      .getElementById(
+        "featuredInfo"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          openGameInfo(
+            grannyGame
+          );
+
+        }
+      );
+
+    /* =========================
+       SETTINGS BUTTON
+       ========================= */
+
+    document
+      .getElementById(
+        "settingsButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          settingsOverlay.classList.add(
+            "show"
+          );
+
+        }
+      );
+
+    /* =========================
+       CHANGELOG BUTTON
+       ========================= */
+
+    document
+      .getElementById(
+        "changeLogButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          changeLogOverlay.classList.add(
+            "show"
+          );
+
+        }
+      );
+
+    /* =========================
+       THEME BUTTONS
+       ========================= */
+
+    document
+      .querySelectorAll(
+        ".theme-choice"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const theme =
+                button.dataset.theme;
+
+              setTheme(
+                theme
+              );
+
+              playSound();
+
+              const customAccent =
+                localStorage.getItem(
+                  "wmCustomAccent"
+                );
+
+              if (
+                customAccent
+              ) {
+
+                localStorage.removeItem(
+                  "wmCustomAccent"
+                );
+
+                document
+                  .documentElement
+                  .style
+                  .removeProperty(
+                    "--accent"
+                  );
+
+                document
+                  .documentElement
+                  .style
+                  .removeProperty(
+                    "--accent2"
+                  );
+
+                document
+                  .documentElement
+                  .style
+                  .removeProperty(
+                    "--glow"
+                  );
+
+                document
+                  .documentElement
+                  .style
+                  .removeProperty(
+                    "--strong-glow"
+                  );
+
+              }
+
+              const picker =
+                document.getElementById(
+                  "accentPicker"
+                );
+
+              if (
+                picker
+              ) {
+
+                picker.value =
+                  themeData[
+                    theme
+                  ].color;
+
+              }
+
+              if (
+                button.classList.contains(
+                  "welcome-theme"
+                )
+              ) {
+
+                localStorage.setItem(
+                  "wmVisited",
+                  "yes"
+                );
+
+                welcomeOverlay.classList.remove(
+                  "show"
+                );
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    /* =========================
+       SOUND SETTING
+       ========================= */
+
+    soundSetting.value =
+      localStorage.getItem(
+        "wmSound"
+      )
+      || "on";
+
+    soundSetting.addEventListener(
+      "change",
+      () => {
+
+        localStorage.setItem(
+          "wmSound",
+          soundSetting.value
+        );
+
+        if (
+          soundSetting.value
+          === "on"
+        ) {
+
+          playSound();
+
+        }
+
+        toast(
+          soundSetting.value
+          === "on"
+            ? "Sound enabled 🔊"
+            : "Sound disabled 🔇"
+        );
+
+      }
+    );
+
+    /* =========================
+       ANIMATION SETTING
+       ========================= */
+
+    animationSetting.value =
+      localStorage.getItem(
+        "wmAnimations"
+      )
+      || "normal";
+
+    applyAnimationSetting(
+      animationSetting.value
+    );
+
+    animationSetting.addEventListener(
+      "change",
+      () => {
+
+        applyAnimationSetting(
+          animationSetting.value
+        );
+
+        toast(
+          `Animations: ${animationSetting.value}`
+        );
+
+      }
+    );
+
+    /* =========================
+       PROFILE
+       ========================= */
+
+    const profileName =
+      document.getElementById(
+        "profileName"
+      );
+
+    const profileAvatar =
+      document.getElementById(
+        "profileAvatar"
+      );
+
+    const profileNameInput =
+      document.getElementById(
+        "profileNameInput"
+      );
+
+    function updateProfileDisplay() {
+
+      const savedName =
+        localStorage.getItem(
+          "wmProfileName"
+        )
+        || "Player";
+
+      const savedAvatar =
+        localStorage.getItem(
+          "wmAvatar"
+        )
+        || "🍉";
+
+      profileName.textContent =
+        savedName;
+
+      profileAvatar.textContent =
+        savedAvatar;
+
+      selectedAvatar =
+        savedAvatar;
+
+      document
+        .querySelectorAll(
+          ".avatar-choice"
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              "active",
+              button.dataset.avatar
+              === savedAvatar
+            );
+
+          }
+        );
+
+    }
+
+    updateProfileDisplay();
+
+    document
+      .getElementById(
+        "editProfileButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          profileNameInput.value =
+            localStorage.getItem(
+              "wmProfileName"
+            )
+            || "Player";
+
+          selectedAvatar =
+            localStorage.getItem(
+              "wmAvatar"
+            )
+            || "🍉";
+
+          document
+            .querySelectorAll(
+              ".avatar-choice"
+            )
+            .forEach(
+              button => {
+
+                button.classList.toggle(
+                  "active",
+                  button.dataset.avatar
+                  === selectedAvatar
+                );
+
+              }
+            );
+
+          profileOverlay.classList.add(
+            "show"
+          );
+
+          setTimeout(
+            () => {
+
+              profileNameInput.focus();
+
+            },
+            100
+          );
+
+        }
+      );
+
+    document
+      .querySelectorAll(
+        ".avatar-choice"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              playSound();
+
+              selectedAvatar =
+                button.dataset.avatar;
+
+              document
+                .querySelectorAll(
+                  ".avatar-choice"
+                )
+                .forEach(
+                  item => {
+
+                    item.classList.remove(
+                      "active"
+                    );
+
+                  }
+                );
+
+              button.classList.add(
+                "active"
+              );
+
+            }
+          );
+
+        }
+      );
+
+    document
+      .getElementById(
+        "saveProfile"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          let name =
+            profileNameInput.value
+              .trim();
+
+          if (
+            !name
+          ) {
+
+            name =
+              "Player";
+
+          }
+
+          name =
+            name.slice(
+              0,
+              20
+            );
+
+          localStorage.setItem(
+            "wmProfileName",
+            name
+          );
+
+          localStorage.setItem(
+            "wmAvatar",
+            selectedAvatar
+          );
+
+          updateProfileDisplay();
+
+          profileOverlay.classList.remove(
+            "show"
+          );
+
+          playSound();
+
+          toast(
+            "Profile saved 👤"
+          );
+
+        }
+      );
+
+    /* =========================
+       CLOSE MODALS
+       ========================= */
+
+    document
+      .querySelectorAll(
+        "[data-close]"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              playSound();
+
+              const id =
+                button.dataset.close;
+
+              document
+                .getElementById(
+                  id
+                )
+                ?.classList.remove(
+                  "show"
+                );
+
+            }
+          );
+
+        }
+      );
+
+    /* CLICK OUTSIDE MODAL */
+
+    document
+      .querySelectorAll(
+        ".overlay"
+      )
+      .forEach(
+        overlay => {
+
+          overlay.addEventListener(
+            "click",
+            event => {
+
+              if (
+                event.target
+                === overlay
+              ) {
+
+                overlay.classList.remove(
+                  "show"
+                );
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    /* =========================
+       STICKY NAVBAR EFFECT
+       ========================= */
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        document
+          .getElementById(
+            "topbar"
+          )
+          .classList.toggle(
+            "scrolled",
+            window.scrollY > 20
+          );
+
+      },
+      {
+        passive: true
+      }
+    );
+
+    /* =========================
+       CURSOR GLOW
+       ========================= */
+
+    const cursorGlow =
+      document.getElementById(
+        "cursorGlow"
+      );
+
+    const hasMouse =
+      window.matchMedia(
+        "(hover:hover) and (pointer:fine)"
+      );
+
+    if (
+      hasMouse.matches
+    ) {
+
+      window.addEventListener(
+        "mousemove",
+        event => {
+
+          cursorGlow.style.left =
+            `${event.clientX}px`;
+
+          cursorGlow.style.top =
+            `${event.clientY}px`;
+
+        },
+        {
+          passive: true
+        }
+      );
+
+    } else {
+
+      cursorGlow.style.display =
+        "none";
+
+    }
+
+    /* =========================
+       FLOATING ACCESSORIES
+       ========================= */
+
+    function createAccessories() {
+
+      const emojis = [
+        "🍉",
+        "🎮",
+        "⭐",
+        "👾",
+        "🕹️",
+        "🍪"
+      ];
+
+      for (
+        let i = 0;
+        i < 8;
+        i++
+      ) {
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "accessory";
+
+        item.textContent =
+          emojis[
+            Math.floor(
+              Math.random()
+              * emojis.length
+            )
+          ];
+
+        item.style.left =
+          `${Math.random() * 100}%`;
+
+        item.style.top =
+          `${Math.random() * 100}%`;
+
+        item.style.fontSize =
+          `${
+            20
+            + Math.random() * 30
+          }px`;
+
+        item.style.animationDelay =
+          `${
+            Math.random() * -8
+          }s`;
+
+        document.body.appendChild(
+          item
+        );
+
+      }
+
+    }
+
+    createAccessories();
+
+    /* =========================
+       FIRST VISIT
+       ========================= */
+
+    const savedTheme =
+      localStorage.getItem(
+        "wmTheme"
+      )
+      || "red";
+
+    setTheme(
+      savedTheme
+    );
+
+    if (
+      !localStorage.getItem(
+        "wmVisited"
+      )
+    ) {
+
+      setTimeout(
+        () => {
+
+          welcomeOverlay.classList.add(
+            "show"
+          );
+
+        },
+        700
+      );
+
+    }
+
+/* =========================
+   LOADER
+   ========================= */
+
+function hideLoader() {
+  const loader =
+    document.getElementById("loader");
+
+  if (!loader) return;
+
+  loader.classList.add("hide");
+
+  setTimeout(() => {
+    loader.style.display = "none";
+  }, 500);
+}
+
+if (document.readyState === "complete") {
+  setTimeout(hideLoader, 450);
+} else {
+  window.addEventListener(
+    "load",
+    () => {
+      setTimeout(hideLoader, 450);
+    }
+  );
+}
+
+/* Fallback so it can never stay stuck */
+setTimeout(hideLoader, 3000);
+
+    /* =========================
+       UNIVERSAL LAUNCHER
+       ========================= */
+
+    const launcher =
+      document.getElementById(
+        "gameLauncher"
+      );
+
+    const launcherFrame =
+      document.getElementById(
+        "launcherFrame"
+      );
+
+    const launcherTitle =
+      document.getElementById(
+        "launcherTitle"
+      );
+
+    function openLauncher(
+      game
+    ) {
+
+      launcherTitle.textContent =
+        game.name;
+
+      launcherFrame.src =
+        game.url;
+
+      launcher.classList.add(
+        "show"
+      );
+
+      document.body.style.overflow =
+        "hidden";
+
+    }
+
+    function closeLauncher() {
+
+      launcher.classList.remove(
+        "show"
+      );
+
+      launcherFrame.src =
+        "about:blank";
+
+      document.body.style.overflow =
+        "";
+
+      if (
+        document.fullscreenElement
+      ) {
+
+        document
+          .exitFullscreen()
+          .catch(
+            () => {}
+          );
+
+      }
+
+    }
+
+    document
+      .getElementById(
+        "launcherClose"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          closeLauncher();
+
+        }
+      );
+
+    document
+      .getElementById(
+        "launcherHome"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          closeLauncher();
+
+          window.scrollTo({
+            top: 0,
+            behavior:
+              animationsEnabled()
+                ? "smooth"
+                : "auto"
+          });
+
+        }
+      );
+
+    document
+      .getElementById(
+        "launcherReload"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          if (
+            launcherFrame.src
+          ) {
+
+            const current =
+              launcherFrame.src;
+
+            launcherFrame.src =
+              "about:blank";
+
+            setTimeout(
+              () => {
+
+                launcherFrame.src =
+                  current;
+
+              },
+              50
+            );
+
+          }
+
+        }
+      );
+
+    document
+      .getElementById(
+        "launcherFullscreen"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          playSound();
+
+          try {
+
+            if (
+              !document.fullscreenElement
+            ) {
+
+              await launcher
+                .requestFullscreen();
+
+            } else {
+
+              await document
+                .exitFullscreen();
+
+            }
+
+          } catch (
+            error
+          ) {
+
+            toast(
+              "Fullscreen is not available."
+            );
+
+          }
+
+        }
+      );
+
+    /* =========================
+       KEYBOARD SHORTCUTS
+       ========================= */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        const active =
+          document.activeElement;
+
+        const typing =
+          active
+          &&
+          (
+            active.tagName
+            === "INPUT"
+            ||
+            active.tagName
+            === "TEXTAREA"
+            ||
+            active.tagName
+            === "SELECT"
+          );
+
+        if (
+          !typing
+          &&
+          event.key === "/"
+        ) {
+
+          event.preventDefault();
+
+          search.focus();
+
+        }
+
+        if (
+          !typing
+          &&
+          event.key
+            .toLowerCase()
+          === "r"
+        ) {
+
+          const random =
+            games[
+              Math.floor(
+                Math.random()
+                * games.length
+              )
+            ];
+
+          launchGame(
+            random
+          );
+
+        }
+
+        if (
+          event.key
+          === "Escape"
+        ) {
+
+          document
+            .querySelectorAll(
+              ".overlay.show"
+            )
+            .forEach(
+              overlay => {
+
+                overlay.classList.remove(
+                  "show"
+                );
+
+              }
+            );
+
+          if (
+            launcher.classList.contains(
+              "show"
+            )
+          ) {
+
+            closeLauncher();
+
+          }
+
+        }
+
+      }
+    );
+
+    /* =========================
+       INITIAL RENDER
+       ========================= */
+
+    renderGames();
+
+    renderRecent();
+
+    updateStats();
+        /* =========================
+       EXTRA PLATFORM FEATURES
+       ========================= */
+
+    const GAME_STATS_KEY =
+      "wmGameStats";
+
+    const RATINGS_KEY =
+      "wmRatings";
+
+    const ACHIEVEMENTS_KEY =
+      "wmAchievements";
+
+    const LAST_GAME_KEY =
+      "wmLastGame";
+
+    const APPEARANCE_KEY =
+      "wmAppearance";
+
+    const ACCENT_KEY =
+      "wmCustomAccent";
+
+    /* =========================
+       JSON STORAGE HELPERS
+       ========================= */
+
+    function loadJSON(
+      key,
+      fallback
+    ) {
+
+      try {
+
+        return JSON.parse(
+          localStorage.getItem(
+            key
+          )
+          ||
+          JSON.stringify(
+            fallback
+          )
+        );
+
+      } catch (
+        error
+      ) {
+
+        return fallback;
+
+      }
+
+    }
+
+    function saveJSON(
+      key,
+      value
+    ) {
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(
+          value
+        )
+      );
+
+    }
+
+    /* =========================
+       GAME CONTROLS
+       ========================= */
+
+    const gameControls = {
+
+      granny: [
+
+        "WASD / Arrow Keys — Move",
+
+        "Mouse — Look around",
+
+        "E / Click — Interact",
+
+        "Esc — Launcher controls"
+
+      ],
+
+      slowroads: [
+
+        "WASD / Arrow Keys — Drive",
+
+        "Mouse — Look around",
+
+        "Esc — Launcher controls"
+
+      ],
+
+      cookieclicker: [
+
+        "Mouse / Touch — Click",
+
+        "Scroll — Browse upgrades",
+
+        "Esc — Launcher controls"
+
+      ]
+
+    };
+
+    /* =========================
+       GAME PLAY COUNTERS
+       ========================= */
+
+    function getGameStats() {
+
+      return loadJSON(
+        GAME_STATS_KEY,
+        {}
+      );
+
+    }
+
+    function recordGameLaunch(
+      game
+    ) {
+
+      const stats =
+        getGameStats();
+
+      stats[
+        game.id
+      ] =
+        (
+          stats[
+            game.id
+          ]
+          || 0
+        )
+        + 1;
+
+      saveJSON(
+        GAME_STATS_KEY,
+        stats
+      );
+
+      localStorage.setItem(
+        LAST_GAME_KEY,
+        game.id
+      );
+
+      updateQuickCards();
+
+      checkAchievements();
+
+    }
+
+    /* =========================
+       CONTINUE PLAYING
+       ========================= */
+
+    function updateQuickCards() {
+
+      const lastId =
+        localStorage.getItem(
+          LAST_GAME_KEY
+        );
+
+      const lastGame =
+        games.find(
+          game =>
+            game.id
+            === lastId
+        );
+
+      const continueName =
+        document.getElementById(
+          "continueName"
+        );
+
+      const continueSub =
+        document.getElementById(
+          "continueSub"
+        );
+
+      const continueCard =
+        document.getElementById(
+          "continueCard"
+        );
+
+      if (
+        lastGame
+      ) {
+
+        continueName.textContent =
+          lastGame.name;
+
+        continueSub.textContent =
+          `${lastGame.category} • Tap to continue`;
+
+        continueCard.style.cursor =
+          "pointer";
+
+        continueCard.onclick =
+          () => {
+
+            playSound();
+
+            launchGame(
+              lastGame
+            );
+
+          };
+
+      } else {
+
+        continueName.textContent =
+          "No recent game yet";
+
+        continueSub.textContent =
+          "Play a game and it will appear here.";
+
+        continueCard.style.cursor =
+          "default";
+
+        continueCard.onclick =
+          null;
+
+      }
+
+      /* MOST PLAYED */
+
+      const stats =
+        getGameStats();
+
+      let bestGame =
+        null;
+
+      let highest =
+        0;
+
+      games.forEach(
+        game => {
+
+          const count =
+            Number(
+              stats[
+                game.id
+              ]
+              || 0
+            );
+
+          if (
+            count > highest
+          ) {
+
+            highest =
+              count;
+
+            bestGame =
+              game;
+
+          }
+
+        }
+      );
+
+      const mostPlayedName =
+        document.getElementById(
+          "mostPlayedName"
+        );
+
+      const mostPlayedSub =
+        document.getElementById(
+          "mostPlayedSub"
+        );
+
+      const mostPlayedCard =
+        document.getElementById(
+          "mostPlayedCard"
+        );
+
+      if (
+        bestGame
+      ) {
+
+        mostPlayedName.textContent =
+          bestGame.name;
+
+        mostPlayedSub.textContent =
+          `${highest} ${
+            highest === 1
+              ? "launch"
+              : "launches"
+          }`;
+
+        mostPlayedCard.style.cursor =
+          "pointer";
+
+        mostPlayedCard.onclick =
+          () => {
+
+            playSound();
+
+            launchGame(
+              bestGame
+            );
+
+          };
+
+      } else {
+
+        mostPlayedName.textContent =
+          "No plays yet";
+
+        mostPlayedSub.textContent =
+          "Your most launched game will appear here.";
+
+        mostPlayedCard.style.cursor =
+          "default";
+
+        mostPlayedCard.onclick =
+          null;
+
+      }
+
+    }
+
+    /* =========================
+       ACHIEVEMENTS
+       ========================= */
+
+    const achievementList = [
+
+      {
+        id:
+          "first-game",
+
+        icon:
+          "🎮",
+
+        name:
+          "First Game",
+
+        text:
+          "Launch your first game.",
+
+        check:
+          () => {
+
+            const stats =
+              getGameStats();
+
+            return (
+              Object.values(
+                stats
+              )
+              .reduce(
+                (
+                  total,
+                  amount
+                ) =>
+                  total
+                  + Number(
+                    amount
+                  ),
+                0
+              )
+              >= 1
+            );
+
+          }
+      },
+
+      {
+        id:
+          "getting-started",
+
+        icon:
+          "🔥",
+
+        name:
+          "Getting Started",
+
+        text:
+          "Launch games 5 times.",
+
+        check:
+          () => {
+
+            const stats =
+              getGameStats();
+
+            return (
+              Object.values(
+                stats
+              )
+              .reduce(
+                (
+                  total,
+                  amount
+                ) =>
+                  total
+                  + Number(
+                    amount
+                  ),
+                0
+              )
+              >= 5
+            );
+
+          }
+      },
+
+      {
+        id:
+          "explorer",
+
+        icon:
+          "🗺️",
+
+        name:
+          "Explorer",
+
+        text:
+          "Play every game at least once.",
+
+        check:
+          () => {
+
+            const stats =
+              getGameStats();
+
+            return games.every(
+              game =>
+                Number(
+                  stats[
+                    game.id
+                  ]
+                  || 0
+                )
+                > 0
+            );
+
+          }
+      },
+
+      {
+        id:
+          "good-taste",
+
+        icon:
+          "❤️",
+
+        name:
+          "Good Taste",
+
+        text:
+          "Favorite a game.",
+
+        check:
+          () => {
+
+            return (
+              favorites.length
+              > 0
+            );
+
+          }
+      },
+
+      {
+        id:
+          "critic",
+
+        icon:
+          "⭐",
+
+        name:
+          "Critic",
+
+        text:
+          "Rate a game.",
+
+        check:
+          () => {
+
+            const ratings =
+              loadJSON(
+                RATINGS_KEY,
+                {}
+              );
+
+            return (
+              Object.keys(
+                ratings
+              )
+              .length > 0
+            );
+
+          }
+      },
+
+      {
+        id:
+          "make-it-yours",
+
+        icon:
+          "🎨",
+
+        name:
+          "Make It Yours",
+
+        text:
+          "Choose a custom accent colour.",
+
+        check:
+          () => {
+
+            return Boolean(
+              localStorage.getItem(
+                ACCENT_KEY
+              )
+            );
+
+          }
+      }
+
+    ];
+
+    function checkAchievements() {
+
+      const unlocked =
+        loadJSON(
+          ACHIEVEMENTS_KEY,
+          []
+        );
+
+      let changed =
+        false;
+
+      achievementList.forEach(
+        achievement => {
+
+          if (
+            achievement.check()
+            &&
+            !unlocked.includes(
+              achievement.id
+            )
+          ) {
+
+            unlocked.push(
+              achievement.id
+            );
+
+            changed =
+              true;
+
+            toast(
+              `Achievement unlocked: ${achievement.name} 🏅`
+            );
+
+          }
+
+        }
+      );
+
+      if (
+        changed
+      ) {
+
+        saveJSON(
+          ACHIEVEMENTS_KEY,
+          unlocked
+        );
+
+      }
+
+      renderAchievements();
+
+    }
+
+    function renderAchievements() {
+
+      const unlocked =
+        loadJSON(
+          ACHIEVEMENTS_KEY,
+          []
+        );
+
+      const grid =
+        document.getElementById(
+          "achievementGrid"
+        );
+
+      if (
+        !grid
+      ) {
+
+        return;
+
+      }
+
+      grid.innerHTML =
+        achievementList
+          .map(
+            achievement => {
+
+              const isUnlocked =
+                unlocked.includes(
+                  achievement.id
+                );
+
+              return `
+                <div
+                  class="achievement-card ${
+                    isUnlocked
+                      ? ""
+                      : "locked"
+                  }"
+                >
+
+                  <div class="achievement-icon">
+                    ${achievement.icon}
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      ${achievement.name}
+                    </strong>
+
+                    <span>
+                      ${achievement.text}
+                    </span>
+
+                  </div>
+
+                  <span class="achievement-state">
+                    ${
+                      isUnlocked
+                        ? "Unlocked"
+                        : "Locked"
+                    }
+                  </span>
+
+                </div>
+              `;
+
+            }
+          )
+          .join(
+            ""
+          );
+
+    }
+
+    /* =========================
+       ACHIEVEMENTS BUTTON
+       ========================= */
+
+    document
+      .getElementById(
+        "achievementsButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          checkAchievements();
+
+          document
+            .getElementById(
+              "achievementsOverlay"
+            )
+            .classList.add(
+              "show"
+            );
+
+        }
+      );
+
+    /* =========================
+       UPGRADE GAME LAUNCHING
+       ========================= */
+
+    const originalLaunchGame =
+      launchGame;
+
+    launchGame =
+      function(
+        game
+      ) {
+
+        recordGameLaunch(
+          game
+        );
+
+        originalLaunchGame(
+          game
+        );
+
+      };
+
+    /* =========================
+       BETTER GAME DETAILS
+       + RATINGS
+       ========================= */
+
+    openGameInfo =
+      function(
+        game
+      ) {
+
+        const ratings =
+          loadJSON(
+            RATINGS_KEY,
+            {}
+          );
+
+        const rating =
+          Number(
+            ratings[
+              game.id
+            ]
+            || 0
+          );
+
+        const controls =
+          gameControls[
+            game.id
+          ]
+          ||
+          [
+            "Controls depend on the game."
+          ];
+
+        document
+          .getElementById(
+            "infoContent"
+          )
+          .innerHTML = `
+
+            <img
+              class="info-image"
+              src="${game.image}"
+              alt="${game.name}"
+            >
+
+            <h2>
+              ${game.name}
+            </h2>
+
+            <p class="modal-note">
+              ${game.description}
+            </p>
+
+            <p>
+              <strong>
+                Category:
+              </strong>
+
+              ${game.category}
+            </p>
+
+            <h3 style="margin-bottom:8px;">
+              Controls
+            </h3>
+
+            <div class="controls-list">
+
+              ${
+                controls
+                  .map(
+                    control =>
+                      `
+                        <div class="control-pill">
+                          ${control}
+                        </div>
+                      `
+                  )
+                  .join(
+                    ""
+                  )
+              }
+
+            </div>
+
+            <div class="rating-box">
+
+              <strong>
+                Your Rating
+              </strong>
+
+              <div
+                class="stars"
+                id="ratingStars"
+              >
+
+                ${
+                  [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                  ]
+                    .map(
+                      value =>
+                        `
+                          <button
+                            class="star-btn ${
+                              value <= rating
+                                ? "active"
+                                : ""
+                            }"
+                            type="button"
+                            data-rating="${value}"
+                            aria-label="${value} stars"
+                          >
+                            ★
+                          </button>
+                        `
+                    )
+                    .join(
+                      ""
+                    )
+                }
+
+              </div>
+
+            </div>
+
+            <button
+              class="primary-btn"
+              id="infoPlayButton"
+              type="button"
+              style="
+                width:100%;
+                margin-top:16px;
+              "
+            >
+              ▶ Play ${game.name}
+            </button>
+          `;
+
+        infoOverlay.classList.add(
+          "show"
+        );
+
+        document
+          .getElementById(
+            "infoPlayButton"
+          )
+          .addEventListener(
+            "click",
+            () => {
+
+              infoOverlay.classList.remove(
+                "show"
+              );
+
+              launchGame(
+                game
+              );
+
+            }
+          );
+
+        document
+          .querySelectorAll(
+            "#ratingStars .star-btn"
+          )
+          .forEach(
+            button => {
+
+              button.addEventListener(
+                "click",
+                () => {
+
+                  const value =
+                    Number(
+                      button.dataset.rating
+                    );
+
+                  ratings[
+                    game.id
+                  ] =
+                    value;
+
+                  saveJSON(
+                    RATINGS_KEY,
+                    ratings
+                  );
+
+                  document
+                    .querySelectorAll(
+                      "#ratingStars .star-btn"
+                    )
+                    .forEach(
+                      star => {
+
+                        star.classList.toggle(
+                          "active",
+                          Number(
+                            star.dataset.rating
+                          )
+                          <= value
+                        );
+
+                      }
+                    );
+
+                  playSound();
+
+                  toast(
+                    `Rated ${game.name} ${value}/5 ⭐`
+                  );
+
+                  checkAchievements();
+
+                }
+              );
+
+            }
+          );
+
+      };
+
+    /* =========================
+       NEWS PANEL
+       ========================= */
+
+    const newsOverlay =
+      document.getElementById(
+        "newsOverlay"
+      );
+
+    const newsButton =
+      document.getElementById(
+        "newsButton"
+      );
+
+    newsButton.addEventListener(
+      "click",
+      () => {
+
+        playSound();
+
+        newsOverlay.classList.add(
+          "show"
+        );
+
+      }
+    );
+
+    newsButton.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Enter"
+          ||
+          event.key === " "
+        ) {
+
+          event.preventDefault();
+
+          playSound();
+
+          newsOverlay.classList.add(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+    /* =========================
+       SUGGESTION BOX
+       ========================= */
+
+    const suggestOverlay =
+      document.getElementById(
+        "suggestOverlay"
+      );
+
+    const suggestionText =
+      document.getElementById(
+        "suggestionText"
+      );
+
+    const suggestionCount =
+      document.getElementById(
+        "suggestionCount"
+      );
+
+    const submitSuggestion =
+      document.getElementById(
+        "submitSuggestion"
+      );
+
+    document
+      .getElementById(
+        "suggestButton"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          playSound();
+
+          suggestOverlay.classList.add(
+            "show"
+          );
+
+          setTimeout(
+            () => {
+
+              suggestionText.focus();
+
+            },
+            50
+          );
+
+        }
+      );
+
+    suggestionText.addEventListener(
+      "input",
+      () => {
+
+        suggestionCount.textContent =
+          suggestionText.value.length;
+
+      }
+    );
+
+    submitSuggestion.addEventListener(
+      "click",
+      async () => {
+
+        const message =
+          suggestionText.value
+            .trim();
+
+        const type =
+          document
+            .getElementById(
+              "suggestionType"
+            )
+            .value;
+
+        if (
+          message.length < 3
+        ) {
+
+          toast(
+            "Write a little more first."
+          );
+
+          return;
+
+        }
+
+        submitSuggestion.disabled =
+          true;
+
+        submitSuggestion.textContent =
+          "Sending...";
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/suggestions",
+              {
+
+                method:
+                  "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify({
+
+                    type:
+                      type,
+
+                    message:
+                      message,
+
+                    displayName:
+                      localStorage.getItem(
+                        "wmProfileName"
+                      )
+                      || "Player"
+
+                  })
+
+              }
+            );
+
+          if (
+            !response.ok
+          ) {
+
+            throw new Error(
+              "Suggestion failed"
+            );
+
+          }
+
+          suggestionText.value =
+            "";
+
+          suggestionCount.textContent =
+            "0";
+
+          suggestOverlay.classList.remove(
+            "show"
+          );
+
+          playSound();
+
+          toast(
+            "Suggestion sent 💡"
+          );
+
+        } catch (
+          error
+        ) {
+
+          toast(
+            "Could not send suggestion right now."
+          );
+
+        } finally {
+
+          submitSuggestion.disabled =
+            false;
+
+          submitSuggestion.textContent =
+            "Send Suggestion";
+
+        }
+
+      }
+    );
+
+    /* =========================
+       LIGHT / DARK APPEARANCE
+       ========================= */
+
+    const appearanceSetting =
+      document.getElementById(
+        "appearanceSetting"
+      );
+
+    function applyAppearance(
+      value
+    ) {
+
+      document.body.classList.toggle(
+        "light-mode",
+        value === "light"
+      );
+
+      localStorage.setItem(
+        APPEARANCE_KEY,
+        value
+      );
+
+    }
+
+    appearanceSetting.value =
+      localStorage.getItem(
+        APPEARANCE_KEY
+      )
+      || "dark";
+
+    applyAppearance(
+      appearanceSetting.value
+    );
+
+    appearanceSetting.addEventListener(
+      "change",
+      () => {
+
+        applyAppearance(
+          appearanceSetting.value
+        );
+
+        playSound();
+
+        toast(
+          appearanceSetting.value
+          === "light"
+            ? "Light mode enabled ☀️"
+            : "Dark mode enabled 🌙"
+        );
+
+      }
+    );
+
+    /* =========================
+       CUSTOM ACCENT COLOUR
+       ========================= */
+
+    const accentPicker =
+      document.getElementById(
+        "accentPicker"
+      );
+
+    const resetAccent =
+      document.getElementById(
+        "resetAccent"
+      );
+
+    function applyCustomAccent(
+      value
+    ) {
+
+      if (
+        !value
+      ) {
+
+        document
+          .documentElement
+          .style
+          .removeProperty(
+            "--accent"
+          );
+
+        document
+          .documentElement
+          .style
+          .removeProperty(
+            "--accent2"
+          );
+
+        document
+          .documentElement
+          .style
+          .removeProperty(
+            "--glow"
+          );
+
+        document
+          .documentElement
+          .style
+          .removeProperty(
+            "--strong-glow"
+          );
+
+        localStorage.removeItem(
+          ACCENT_KEY
+        );
+
+        return;
+
+      }
+
+      document
+        .documentElement
+        .style
+        .setProperty(
+          "--accent",
+          value
+        );
+
+      document
+        .documentElement
+        .style
+        .setProperty(
+          "--accent2",
+          value
+        );
+
+      document
+        .documentElement
+        .style
+        .setProperty(
+          "--glow",
+          `${value}44`
+        );
+
+      document
+        .documentElement
+        .style
+        .setProperty(
+          "--strong-glow",
+          `${value}88`
+        );
+
+      localStorage.setItem(
+        ACCENT_KEY,
+        value
+      );
+
+      accentPicker.value =
+        value;
+
+    }
+
+    const savedCustomAccent =
+      localStorage.getItem(
+        ACCENT_KEY
+      );
+
+    if (
+      savedCustomAccent
+    ) {
+
+      applyCustomAccent(
+        savedCustomAccent
+      );
+
+    } else {
+
+      const activeTheme =
+        document.body.dataset.theme
+        || "red";
+
+      accentPicker.value =
+        themeData[
+          activeTheme
+        ]?.color
+        || "#ff3154";
+
+    }
+
+    accentPicker.addEventListener(
+      "input",
+      () => {
+
+        applyCustomAccent(
+          accentPicker.value
+        );
+
+        checkAchievements();
+
+      }
+    );
+
+    resetAccent.addEventListener(
+      "click",
+      () => {
+
+        applyCustomAccent(
+          null
+        );
+
+        const currentTheme =
+          document.body.dataset.theme
+          || "red";
+
+        setTheme(
+          currentTheme
+        );
+
+        accentPicker.value =
+          themeData[
+            currentTheme
+          ]?.color
+          || "#ff3154";
+
+        playSound();
+
+        toast(
+          "Accent colour reset"
+        );
+
+        checkAchievements();
+
+      }
+    );
+
+    /* =========================
+       EXTRA KEYBOARD SHORTCUT
+       ========================= */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        const active =
+          document.activeElement;
+
+        const typing =
+          active
+          &&
+          (
+            active.tagName
+            === "INPUT"
+            ||
+            active.tagName
+            === "TEXTAREA"
+            ||
+            active.tagName
+            === "SELECT"
+          );
+
+        if (
+          !typing
+          &&
+          event.key
+            .toLowerCase()
+          === "a"
+        ) {
+
+          event.preventDefault();
+
+          document
+            .getElementById(
+              "achievementsButton"
+            )
+            .click();
+
+        }
+
+      }
+    );
+
+    /* =========================
+       PWA / SERVICE WORKER
+       ========================= */
+
+    if (
+      "serviceWorker"
+      in navigator
+    ) {
+
+      window.addEventListener(
+        "load",
+        () => {
+
+          navigator
+            .serviceWorker
+            .register(
+              "/sw.js"
+            )
+            .catch(
+              () => {
+
+                /* Ignore service worker errors */
+
+              }
+            );
+
+        }
+      );
+
+    }
+
+    /* =========================
+       INITIAL EXTRA FEATURE LOAD
+       ========================= */
+
+    updateQuickCards();
+
+    checkAchievements();
+
+  </script>
+
 </body>
 </html>

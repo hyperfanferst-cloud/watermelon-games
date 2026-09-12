@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Granny-style Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: #161616;
+    }
+
+    .topbar a,
+    .topbar button {
+      color: white;
+      background: #2b2b2b;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .game-area {
+      height: calc(100vh - 66px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 700px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <a href="/games">← Back to Games</a>
+    <button onclick="document.documentElement.requestFullscreen()">Fullscreen</button>
+  </div>
+
+  <div class="game-area">
+    <div class="box">
+      <h1>Granny-style Horror Game</h1>
+      <p>This page is ready for the actual game files.</p>
+    </div>
+  </div>
+
+</body>
+</html>

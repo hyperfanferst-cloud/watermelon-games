@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>BitLife</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    .game {
+      position: fixed;
+      inset: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+
+    .controls {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 9999;
+
+      display: flex;
+      gap: 8px;
+
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    body:hover .controls {
+      opacity: 1;
+    }
+
+    .button {
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 9px;
+
+      padding: 9px 13px;
+
+      color: white;
+      background: rgba(0,0,0,0.75);
+
+      font-size: 13px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      backdrop-filter: blur(10px);
+    }
+
+    .button:hover {
+      background: rgba(30,30,30,0.9);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="controls">
+
+    <button
+      class="button"
+      onclick="location.href='/games'"
+    >
+      ← Back to Games
+    </button>
+
+    <button
+      class="button"
+      onclick="goFullscreen()"
+    >
+      Fullscreen
+    </button>
+
+  </div>
+
+  <div
+    class="game"
+    id="game"
+  >
+    <iframe
+      src="https://kiwigames.fun/storage/bitlife/"
+      allow="fullscreen; autoplay"
+      allowfullscreen
+    ></iframe>
+  </div>
+
+  <script>
+    function goFullscreen() {
+      const game =
+        document.getElementById("game");
+
+      if (game.requestFullscreen) {
+        game.requestFullscreen();
+      } else if (
+        game.webkitRequestFullscreen
+      ) {
+        game.webkitRequestFullscreen();
+      }
+    }
+  </script>
+
+</body>
+</html>
